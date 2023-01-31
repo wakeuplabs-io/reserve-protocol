@@ -126,9 +126,9 @@ contract BackingManagerP1Fuzz is BackingManagerP1 {
     }
 
     function saveSurplusAndDeficitTokens() external {
-        address bh = IMainFuzz(address(main)).basketHandler();
+        IBasketHandler bh = IMainFuzz(address(main)).basketHandler();
         TradingContext memory components = TradingContext({
-            basketsHeld: IBasketHandler(bh).basketsHeldBy(address(this)),
+            basketsHeld: bh.basketsHeldBy(address(this)),
             bm: IBackingManager(address(this)),
             bh: bh,
             reg: IMainFuzz(address(main)).assetRegistry(),
@@ -193,9 +193,9 @@ contract BackingManagerP1Fuzz is BackingManagerP1 {
         view
         returns (RecollateralizationLibP1.BasketRange memory)
     {
-        address bh = IMainFuzz(address(main)).basketHandler();
+        IBasketHandler bh = IMainFuzz(address(main)).basketHandler();
         TradingContext memory components = TradingContext({
-            basketsHeld: IBasketHandler(bh).basketsHeldBy(address(this)),
+            basketsHeld: bh.basketsHeldBy(address(this)),
             bm: IBackingManager(address(this)),
             bh: bh,
             reg: IMainFuzz(address(main)).assetRegistry(),
