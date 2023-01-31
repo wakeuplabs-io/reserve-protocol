@@ -112,7 +112,10 @@ contract BackingManagerP1 is TradingP1, IBackingManager {
         uint48 basketTimestamp = basketHandler.timestamp();
         if (block.timestamp < basketTimestamp + tradingDelay) return;
 
-        if (basketHandler.fullyCollateralized()) {
+        uint192 basketsHeld = basketHandler.basketsHeldBy(address(this));
+
+        // if (basketHandler.fullyCollateralized())
+        if (basketsHeld >= rToken.basketsNeeded()) {
             // == Interaction (then return) ==
             handoutExcessAssets(erc20s);
         } else {
@@ -131,7 +134,7 @@ contract BackingManagerP1 is TradingP1, IBackingManager {
              */
 
             (bool doTrade, TradeRequest memory req) = RecollateralizationLibP1
-                .prepareRecollateralizationTrade(this);
+                .prepareRecollateralizationTrade(this, basketsHeld);
 
             if (doTrade) {
                 // Seize RSR if needed

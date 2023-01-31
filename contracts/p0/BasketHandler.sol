@@ -62,7 +62,11 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
     // effects: disabled' = true
     function disableBasket() external {
         require(_msgSender() == address(main.assetRegistry()), "asset registry only");
+
         uint192[] memory refAmts = new uint192[](basket.erc20s.length);
+        for (uint256 i = 0; i < basket.erc20s.length; i++) {
+            refAmts[i] = basket.refAmts[basket.erc20s[i]];
+        }
         emit BasketSet(nonce, basket.erc20s, refAmts, true);
         disabled = true;
     }
@@ -186,13 +190,11 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
     }
 
     /// @return {tok/BU} The token-quantity of an ERC20 token in the basket.
-    // Returns 0 if erc20 is not registered, disabled, or not in the basket
+    // Returns 0 if erc20 is not registered or not in the basket
     // Returns FIX_MAX (in lieu of +infinity) if Collateral.refPerTok() is 0.
     // Otherwise returns (token's basket.refAmts / token's Collateral.refPerTok())
     function quantity(IERC20 erc20) public view returns (uint192) {
         try main.assetRegistry().toColl(erc20) returns (ICollateral coll) {
-            if (coll.status() == CollateralStatus.DISABLED) return FIX_ZERO;
-
             uint192 refPerTok = coll.refPerTok();
             if (refPerTok == 0) return FIX_MAX;
             // {tok/BU} = {ref/BU} / {ref/tok}
@@ -203,8 +205,8 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
     }
 
     /// Should not revert
-    /// @return low {UoA/tok} The lower end of the price estimate
-    /// @return high {UoA/tok} The upper end of the price estimate
+    /// @return low {UoA/BU} The lower end of the price estimate
+    /// @return high {UoA/BU} The upper end of the price estimate
     // returns sum(quantity(erc20) * price(erc20) for erc20 in basket.erc20s)
     function price() external view returns (uint192 low, uint192 high) {
         return _price(false);
@@ -212,16 +214,16 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
 
     /// Should not revert
     /// lowLow should be nonzero when the asset might be worth selling
-    /// @return lotLow {UoA/tok} The lower end of the lot price estimate
-    /// @return lotHigh {UoA/tok} The upper end of the lot price estimate
+    /// @return lotLow {UoA/BU} The lower end of the lot price estimate
+    /// @return lotHigh {UoA/BU} The upper end of the lot price estimate
     // returns sum(quantity(erc20) * lotPrice(erc20) for erc20 in basket.erc20s)
     function lotPrice() external view returns (uint192 lotLow, uint192 lotHigh) {
         return _price(true);
     }
 
     /// Returns the price of a BU, using the lot prices if `useLotPrice` is true
-    /// @return low {UoA/tok} The lower end of the lot price estimate
-    /// @return high {UoA/tok} The upper end of the lot price estimate
+    /// @return low {UoA/BU} The lower end of the lot price estimate
+    /// @return high {UoA/BU} The upper end of the lot price estimate
     function _price(bool useLotPrice) internal view returns (uint192 low, uint192 high) {
         IAssetRegistry reg = main.assetRegistry();
 
@@ -236,33 +238,44 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
                 ? reg.toAsset(basket.erc20s[i]).lotPrice()
                 : reg.toAsset(basket.erc20s[i]).price();
 
-            low256 += quantityMulPrice(qty, lowP);
-            high256 += quantityMulPrice(qty, highP);
+            low256 += safeMul(qty, lowP, RoundingMode.ROUND);
+            high256 += safeMul(qty, highP, RoundingMode.ROUND);
         }
 
         low = low256 >= FIX_MAX ? FIX_MAX : uint192(low256);
         high = high256 >= FIX_MAX ? FIX_MAX : uint192(high256);
     }
 
-    /// Multiply quantity by price, rounding up to FIX_MAX and down to 0
-    /// @param qty {tok/BU}
-    /// @param p {UoA/tok}
-    function quantityMulPrice(uint192 qty, uint192 p) internal pure returns (uint192) {
-        if (qty == 0 || p == 0) return 0;
-        if (qty == FIX_MAX || p == FIX_MAX) return FIX_MAX;
+    /// Multiply two fixes, rounding up to FIX_MAX and down to 0
+    /// @param a First param to multiply
+    /// @param b Second param to multiply
+    function safeMul(
+        uint192 a,
+        uint192 b,
+        RoundingMode rounding
+    ) internal pure returns (uint192) {
+        // untestable:
+        //      a will never = 0 here because of the check in _price()
+        if (a == 0 || b == 0) return 0;
+        // untestable:
+        //      a = FIX_MAX iff b = 0
+        if (a == FIX_MAX || b == FIX_MAX) return FIX_MAX;
 
         // return FIX_MAX instead of throwing overflow errors.
         unchecked {
             // p and mul *are* Fix values, so have 18 decimals (D18)
-            uint256 rawDelta = uint256(p) * qty; // {D36} = {D18} * {D18}
-            // if we overflowed *, then return FIX_MAX
-            if (rawDelta / p != qty) return FIX_MAX;
+            uint256 rawDelta = uint256(b) * a; // {D36} = {D18} * {D18}
+            // if we overflowed, then return FIX_MAX
+            if (rawDelta / b != a) return FIX_MAX;
+            uint256 shiftDelta = rawDelta;
 
-            // add in FIX_HALF for rounding
-            uint256 shiftDelta = rawDelta + (FIX_ONE / 2);
+            // add in rounding
+            if (rounding == RoundingMode.ROUND) shiftDelta += (FIX_ONE / 2);
+            else if (rounding == RoundingMode.CEIL) shiftDelta += FIX_ONE - 1;
+
             if (shiftDelta < rawDelta) return FIX_MAX;
 
-            // return _div(rawDelta, FIX_ONE, ROUND)
+            // return _div(rawDelta, FIX_ONE, rounding)
             return uint192(shiftDelta / FIX_ONE); // {D18} = {D36} / {D18}
         }
     }
@@ -287,15 +300,14 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
         view
         returns (address[] memory erc20s, uint256[] memory quantities)
     {
-        uint256 length = basket.erc20s.length;
-        erc20s = new address[](length);
-        quantities = new uint256[](length);
+        erc20s = new address[](basket.erc20s.length);
+        quantities = new uint256[](basket.erc20s.length);
 
-        for (uint256 i = 0; i < length; ++i) {
+        for (uint256 i = 0; i < basket.erc20s.length; ++i) {
             erc20s[i] = address(basket.erc20s[i]);
 
             // {qTok} = {tok/BU} * {BU} * {tok} * {qTok/tok}
-            quantities[i] = quantity(basket.erc20s[i]).mul(amount, rounding).shiftl_toUint(
+            quantities[i] = safeMul(quantity(basket.erc20s[i]), amount, rounding).shiftl_toUint(
                 int8(IERC20Metadata(address(basket.erc20s[i])).decimals()),
                 rounding
             );
@@ -528,7 +540,7 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
         require(ArrayLib.allUnique(erc20s), "contains duplicates");
     }
 
-    /// Good collateral is registered, collateral, not DISABLED, has the expected targetName,
+    /// Good collateral is registered, collateral, SOUND, has the expected targetName,
     /// and not a system token or 0 addr
     function goodCollateral(bytes32 targetName, IERC20 erc20) private view returns (bool) {
         if (erc20 == IERC20(address(0))) return false;
@@ -539,7 +551,7 @@ contract BasketHandlerP0 is ComponentP0, IBasketHandler {
         try main.assetRegistry().toColl(erc20) returns (ICollateral coll) {
             return
                 targetName == coll.targetName() &&
-                coll.status() != CollateralStatus.DISABLED &&
+                coll.status() == CollateralStatus.SOUND &&
                 coll.refPerTok() > 0 &&
                 coll.targetPerRef() > 0;
         } catch {
