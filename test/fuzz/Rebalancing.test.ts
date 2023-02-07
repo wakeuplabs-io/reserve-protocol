@@ -3,7 +3,7 @@ import { ethers } from 'hardhat'
 import { Wallet, Signer, BigNumber } from 'ethers'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 
-import { fp } from '../../common/numbers'
+import { fp, bn } from '../../common/numbers'
 import { whileImpersonating } from '../utils/impersonation'
 import { CollateralStatus, RoundingMode, TradeStatus } from '../../common/constants'
 import { advanceTime, advanceBlocks } from '../utils/time'
@@ -1590,5 +1590,34 @@ describe('The Rebalancing scenario', () => {
     const rTokBalAfter = await token.balanceOf(comp.rToken.address)
     expect(rTokBalAfter).to.equal(0)
     expect(bmBalAFter).to.equal(bmBalBefore.add(rTokBalBefore).add(amt))
+  })
+
+  it.only('mocks the failure', async () => {
+    await advanceTime(63500)
+    await advanceBlocks(4641)
+    // manageBackingTokens() from: 0x0000000000000000000000000000000000010000 Time delay: 63500 seconds Block delay: 4641
+    await scenario.connect(alice).manageBackingTokens()
+    // createToken(0,"\NUL","\NUL") from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).createToken(0,"\NUL","\NUL")
+    // *wait*
+    // issue(400623555814142) from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).issue(400623555814142)
+    // *wait*
+    await advanceTime(63500)
+    await advanceBlocks(4641)
+    // swapRegisteredAsset(36,0,8421411638574458141681995940662771667477248710467825558969664488109615127440,3,false,false) from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).swapRegisteredAsset(36,0,bn('8421411638574458141681995940662771667477248710467825558969664488109615127440'),3,false,false)
+    // saveBasketRange() from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).saveBasketRange()
+    // transferFrom(2,0,0,194966158661769055172184548548508711551232618281959441963245459551130168137) from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).transferFrom(2,0,0,bn('194966158661769055172184548548508711551232618281959441963245459551130168137'))
+    // setUnstakingDelay(431994307821249466151546817196356461862387920072886828741061389722366437) from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).setUnstakingDelay(bn('431994307821249466151546817196356461862387920072886828741061389722366437'))
+    // refreshBasket() from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).refreshBasket()
+    // issueTo(1,0) from: 0x0000000000000000000000000000000000010000
+    await scenario.connect(alice).issueTo(1,0)
+    const invariantHolds = await scenario.echidna_basketRangeSmallerWhenRebalancing()
+    console.log('invariant holds', invariantHolds)
   })
 })
