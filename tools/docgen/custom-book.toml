@@ -1,0 +1,12 @@
+[book]
+src = "tools/docgen"
+title = "Reserve Developer Documentation"
+
+[output.html]
+no-section-label = true
+additional-js = ["solidity.min.js"]
+additional-css = ["tools/docgen/custom.css"]
+git-repository-url = "https://github.com/reserve-protocol/protocol"
+
+[output.html.fold]
+enable = true
