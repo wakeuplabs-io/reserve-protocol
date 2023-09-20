@@ -91,6 +91,7 @@ textarea {
 /* Navigation Styles */
 #menu-bar {
     background-color: var(--rp-offwhite);
+    border: none;
 }
 
 .nav-chapters:hover, .mobile-nav-chapters {

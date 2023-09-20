@@ -3,5 +3,5 @@ src="tools/docgen"
 
 [doc]
 out = "tools/docgen"
-book = "tools/docgen/custom-book.toml"
+book = "tools/docgen"
 ignore = ["**/node_modules/**/*"]
