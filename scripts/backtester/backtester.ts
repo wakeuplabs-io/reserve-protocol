@@ -1,4 +1,3 @@
-import { BytesLike } from 'ethers/lib/utils'
 import fetch from 'isomorphic-fetch'
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -8,25 +7,26 @@ interface SubmitBacktestJobRequest {
   startBlock: number
   samples: number
   config: any
-  byteCode: string,
-  erc20Wrapper?: {
-    byteCode: string,
-    calls: { data: string }[]
-  } | null | undefined,
-  variants: { name: string, args: string }[]
+  byteCode: string
+  erc20Wrapper?:
+    | {
+        byteCode: string
+        calls: { data: string }[]
+      }
+    | null
+    | undefined
+  variants: { name: string; args: string }[]
 }
 
-export const submitBacktest = async (
-  backtestServiceUrl: string,
-  req: SubmitBacktestJobRequest,
-) => {
-  const resp = await fetch(`${backtestServiceUrl}/api/backtest-plugin`, {
+export const submitBacktest = async (backtestServiceUrl: string, req: SubmitBacktestJobRequest) => {
+  const resp = await fetch(`${backtestServiceUrl}/api/backtest-plugin-batch`, {
     method: 'POST',
     body: JSON.stringify(req),
     headers: {
       'Content-Type': 'application/json',
     },
   })
+  console.log(resp)
   let result: any = await resp.json()
 
   return result
@@ -63,15 +63,9 @@ export const backTestPlugin = async (
   request: SubmitBacktestJobRequest
 ) => {
   try {
-    const backtestJob = await submitBacktest(
-      backtestServiceUrl,
-      request
-    )
+    const backtestJob = await submitBacktest(backtestServiceUrl, request)
 
-    const backtestJobResult = await awaitBacktestJobResult(
-      backtestServiceUrl,
-      backtestJob.hash
-    )
+    const backtestJobResult = await awaitBacktestJobResult(backtestServiceUrl, backtestJob.hash)
 
     return {
       status: backtestJobResult.jobStatus,

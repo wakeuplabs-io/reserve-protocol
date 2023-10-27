@@ -19,8 +19,28 @@ import { ContractFactory } from 'ethers'
 async function main() {
   // ==== Read Configuration ====
   const [deployer] = await hre.ethers.getSigners()
-
   const chainId = await getChainId(hre)
+  const usdcOracleTimeout = 86400 // 24 hr
+  const usdcOracleError = fp('0.003') // 0.3% (Base)
+  console.log(
+    {
+      priceTimeout: priceTimeout.toString(),
+      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.USDC,
+      oracleError: usdcOracleError.toString(),
+      erc20: '0x',
+      maxTradeVolume: fp('1e6').toString(), // $1m,
+      oracleTimeout: oracleTimeout(chainId, usdcOracleTimeout).toString(), // 24h hr,
+      targetName: hre.ethers.utils.formatBytes32String('USD'),
+      defaultThreshold: fp('0.01').add(usdcOracleError).toString(), // 1% + 0.3%
+      delayUntilDefault: bn('86400').toString(), // 24h
+    },
+    revenueHiding.toString(),
+    bn('10000e6').toString()
+  ) // $10k)
+
+  if (1) {
+    return
+  }
 
   console.log(`Deploying Collateral to network ${hre.network.name} (${chainId})
     with burner account: ${deployer.address}`)
@@ -60,9 +80,6 @@ async function main() {
   )
 
   const CTokenV3Factory: ContractFactory = await hre.ethers.getContractFactory('CTokenV3Collateral')
-
-  const usdcOracleTimeout = 86400 // 24 hr
-  const usdcOracleError = fp('0.003') // 0.3% (Base)
 
   const collateral = <CTokenV3Collateral>await CTokenV3Factory.connect(deployer).deploy(
     {

@@ -124,10 +124,6 @@ const config: HardhatUserConfig = {
     timeout: TIMEOUT,
     slow: 1000,
     retries: 3,
-<<<<<<< Updated upstream
-=======
-    parallel: true,
->>>>>>> Stashed changes
   },
   contractSizer: {
     alphaSort: false,
