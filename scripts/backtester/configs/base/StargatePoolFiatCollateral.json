@@ -1,0 +1,57 @@
+{
+  "collateralContract": "StargatePoolFiatCollateral",
+  "startBlock": 4601325,
+  "stride": 1,
+  "endBlock": 5815943,
+  "collateralConfig": {
+    "priceTimeout": "604800",
+    "chainlinkFeed": "0x7e860098f58bbfc8648a4311b374b1d669a2bc6b",
+    "oracleError": "2500000000000000",
+    "erc20": "0x0000000000000000000000000000000000000000",
+    "maxTradeVolume": "1000000000000000000000000",
+    "oracleTimeout": "86460",
+    "targetName": "0x5553440000000000000000000000000000000000000000000000000000000000",
+    "defaultThreshold": "12500000000000000",
+    "delayUntilDefault": "86400"
+  },
+  "variants": [
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.0",
+      "args": ["0"]
+    },
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.000001",
+      "args": ["1000000000000"]
+    },
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.00001",
+      "args": ["10000000000000"]
+    },
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.0001",
+      "args": ["100000000000000"]
+    },
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.001",
+      "args": ["1000000000000000"]
+    },
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.01",
+      "args": ["10000000000000000"]
+    },
+    {
+      "name": "BaseStargatePoolFiatCollateral-USDC:0.1",
+      "args": ["100000000000000000"]
+    }
+  ],
+  "erc20Wrapper": {
+    "contract": "StargateRewardableWrapper",
+    "args": [
+      "Wrapped Stargate USDbC",
+      "wsgUSDbC",
+      "0xe3b53af74a4bf62ae5511055290838050bf764df",
+      "0x06eb48763f117c7be887296cdcdfad2e4092739c",
+      "0x4c80E24119CFB836cdF0a6b53dc23F04F7e652CA"
+    ]
+  }
+}

@@ -30,6 +30,12 @@ async function main() {
   const [deployer] = await hre.ethers.getSigners()
 
   const chainId = await getChainId(hre)
+  let chainIdKey = useEnv('FORK_NETWORK', 'mainnet') == 'mainnet' ? '1' : '8453'
+  let USDC_NAME = 'USDC'
+  let name = 'Wrapped Stargate USDC'
+  let symbol = 'wsgUSDC'
+  let sUSDC = networkConfig[chainIdKey].tokens.sUSDC
+  let oracleError = fp('0.0025')
 
   console.log(`Deploying Collateral to network ${hre.network.name} (${chainId})
     with burner account: ${deployer.address}`)
@@ -52,12 +58,7 @@ async function main() {
   /********  Deploy Stargate USDC Wrapper  **************************/
 
   const WrapperFactory: ContractFactory = await hre.ethers.getContractFactory('StargateRewardableWrapper')
-  let chainIdKey = useEnv('FORK_NETWORK', 'mainnet') == 'mainnet' ? '1' : '8453'
-  let USDC_NAME = 'USDC'
-  let name = 'Wrapped Stargate USDC'
-  let symbol = 'wsgUSDC'
-  let sUSDC = networkConfig[chainIdKey].tokens.sUSDC
-  let oracleError = fp('0.0025')
+
 
   if (chainIdKey == '8453') {
     USDC_NAME = 'USDbC'
