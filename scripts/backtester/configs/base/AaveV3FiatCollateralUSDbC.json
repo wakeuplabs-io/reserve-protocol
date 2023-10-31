@@ -1,0 +1,47 @@
+{
+  "collateralContract": "AaveV3FiatCollateral",
+  "startBlock": 4568880,
+  "stride": 1,
+  "endBlock": 5815943,
+  "collateralConfig": {
+    "priceTimeout": "604800",
+    "chainlinkFeed": "0x7e860098f58bbfc8648a4311b374b1d669a2bc6b",
+    "oracleError": "2500000000000000",
+    "erc20": "0x308447562442Cc43978f8274fA722C9C14BafF8b",
+    "maxTradeVolume": "1000000000000000000000000",
+    "oracleTimeout": "4294967296",
+    "targetName": "0x5553440000000000000000000000000000000000000000000000000000000000",
+    "defaultThreshold": "13000000000000000",
+    "delayUntilDefault": "86400"
+  },
+  "variants": [
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.0",
+      "args": ["0"]
+    },
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.000001",
+      "args": ["1000000000000"]
+    },
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.00001",
+      "args": ["10000000000000"]
+    },
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.0001",
+      "args": ["100000000000000"]
+    },
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.001",
+      "args": ["1000000000000000"]
+    },
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.01",
+      "args": ["10000000000000000"]
+    },
+    {
+      "name": "BaseAaveV3FiatCollateral-USDC:0.1",
+      "args": ["100000000000000000"]
+    }
+  ]
+}

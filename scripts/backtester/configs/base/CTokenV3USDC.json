@@ -6,7 +6,7 @@
   "collateralConfig": {
     "priceTimeout": "604800",
     "chainlinkFeed": "0x7e860098f58bbfc8648a4311b374b1d669a2bc6b",
-    "oracleError": "30000000000000000",
+    "oracleError": "2500000000000000",
     "erc20": "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf",
     "maxTradeVolume": "1000000000000000000000000",
     "oracleTimeout": "4294967296",
