@@ -1,0 +1,89 @@
+{
+  "collateralContract": "CBEthCollateralL2",
+  "startBlock": 4568880,
+  "stride": 1,
+  "endBlock": 5815943,
+  "collateralConfig": {
+    "priceTimeout": "604800",
+    "chainlinkFeed": "0x71041dddad3595f9ced3dccfbe3d1f4b0a16bb70",
+    "oracleError": "6507500000000000",
+    "erc20": "0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22",
+    "maxTradeVolume": "1000000000000000000000000",
+    "oracleTimeout": "1260",
+    "targetName": "0x4554480000000000000000000000000000000000000000000000000000000000",
+    "defaultThreshold": "26507500000000000",
+    "delayUntilDefault": "86400"
+  },
+  "variants": [
+    {
+      "name": "BaseCBETH:0.0",
+      "args": [
+        "0",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    },
+    {
+      "name": "BaseCBETH:0.000001",
+      "args": [
+        "1000000000000",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    },
+    {
+      "name": "BaseCBETH:0.00001",
+      "args": [
+        "10000000000000",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    },
+    {
+      "name": "BaseCBETH:0.0001",
+      "args": [
+        "100000000000000",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    },
+    {
+      "name": "BaseCBETH:0.001",
+      "args": [
+        "1000000000000000",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    },
+    {
+      "name": "BaseCBETH:0.01",
+      "args": [
+        "10000000000000000",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    },
+    {
+      "name": "BaseCBETH:0.1",
+      "args": [
+        "100000000000000000",
+        "0x806b4ac04501c29769051e42783cf04dce41440b",
+        "86460",
+        "0x868a501e68F3D1E89CfC0D22F6b22E8dabce5F04",
+        "86460"
+      ]
+    }
+  ]
+}

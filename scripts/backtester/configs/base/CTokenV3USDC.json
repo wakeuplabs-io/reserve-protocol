@@ -1,55 +1,47 @@
 {
-  "collateralContract": "CTokenV3Collateral",
-  "startBlock": 4601325,
+  "collateralContract": "CBEthCollateral",
+  "startBlock": 15995000,
   "stride": 1,
-  "endBlock": 5815943,
+  "endBlock": 17590000,
   "collateralConfig": {
     "priceTimeout": "604800",
-    "chainlinkFeed": "0x7e860098f58bbfc8648a4311b374b1d669a2bc6b",
-    "oracleError": "2500000000000000",
-    "erc20": "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf",
+    "chainlinkFeed": "0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419",
+    "oracleError": "25100000000000000",
+    "erc20": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
     "maxTradeVolume": "1000000000000000000000000",
-    "oracleTimeout": "4294967296",
-    "targetName": "0x5553440000000000000000000000000000000000000000000000000000000000",
-    "defaultThreshold": "13000000000000000",
+    "oracleTimeout": "3660",
+    "targetName": "0x4554480000000000000000000000000000000000000000000000000000000000",
+    "defaultThreshold": "150000000000000000",
     "delayUntilDefault": "86400"
   },
   "variants": [
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.0",
-      "args": ["0", "10000000000"]
+      "name": "CBETH:0.0",
+      "args": ["0", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     },
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.000001",
-      "args": ["1000000000000", "10000000000"]
+      "name": "CBETH:0.000001",
+      "args": ["1000000000000", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     },
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.00001",
-      "args": ["10000000000000", "10000000000"]
+      "name": "CBETH:0.00001",
+      "args": ["10000000000000", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     },
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.0001",
-      "args": ["100000000000000", "10000000000"]
+      "name": "CBETH:0.0001",
+      "args": ["100000000000000", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     },
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.001",
-      "args": ["1000000000000000", "10000000000"]
+      "name": "CBETH:0.001",
+      "args": ["1000000000000000", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     },
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.01",
-      "args": ["10000000000000000", "10000000000"]
+      "name": "CBETH:0.01",
+      "args": ["10000000000000000", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     },
     {
-      "name": "BaseCTokenV3Collateral-USDC:0.1",
-      "args": ["100000000000000000", "10000000000"]
+      "name": "CBETH:0.1",
+      "args": ["100000000000000000", "0xf017fcb346a1885194689ba23eff2fe6fa5c483b", "86460"]
     }
-  ],
-  "erc20Wrapper": {
-    "contract": "CusdcV3Wrapper",
-    "args": [
-      "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf",
-      "0x123964802e6ababbe1bc9547d72ef1b69b00a6b1",
-      "0x9e1028f5f1d5ede59748ffcee5532509976840e0"
-    ]
-  }
+  ]
 }
