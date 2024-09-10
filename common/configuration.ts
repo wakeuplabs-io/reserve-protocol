@@ -487,6 +487,7 @@ export const networkConfig: { [key: string]: INetworkConfig } = {
       USDC: '0x1265Ec05FD621d82F224814902c925a600307fb3',
       USDT: '0x3D3226C68B1425FdaA273F2A6295D5C40462327C',
       RSR: '0xc8058960a9d7E7d81143BDBA38d19e6824165932',
+      
     },
     chainlinkFeeds: {
       DAI: '0x440bD1535a02243d72E0fEED45B137efcC98bF7e',
@@ -519,7 +520,7 @@ export const networkConfig: { [key: string]: INetworkConfig } = {
       sUSDbC: '0x4c80e24119cfb836cdf0a6b53dc23f04f7e652ca',
       wstETH: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452',
       STG: '0xE3B53AF74a4BF62Ae5511055290838050bf764Df',
-      nuARS: '0x5e40f26E89213660514c51Fb61b2d357DBf63C85',
+      nuARS: '0xC1F4C75e8925A67BE4F35D6b1c044B5ea8849a58',
     },
     chainlinkFeeds: {
       DAI: '0x591e79239a7d679378ec8c847e5038150364c78f', // 0.3%, 24hr

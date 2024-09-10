@@ -27,6 +27,6 @@ export const ETH_ORACLE_ERROR = fp('0.005')
 export const PRICE_TIMEOUT = bn(604800) // 1 week
 export const DELAY_UNTIL_DEFAULT = bn(86400)
 
-export const FORK_BLOCK = 19463181
+export const FORK_BLOCK = 19423387
 
 export const NUM_HOLDER = '0x2CfC3C6B4D058C5B0f823C9fcD65198BFeDEAf85'

@@ -6,10 +6,8 @@ import { ERC4626FiatCollateral } from "../ERC4626FiatCollateral.sol";
 
 /**
  * @title NumFiatCollateral
- * @notice Collateral plugin for a Num vault with fiat collateral, like USDC or USDT
+ * @notice Collateral plugin for a Num vault with fiat collateral
  * Expected: {tok} != {ref}, {ref} is pegged to {target} unless defaulting, {target} == {UoA}
- *
- * For example: steakUSDC, steakPYUSD, bbUSDT
  */
 contract NumFiatCollateral is ERC4626FiatCollateral {
     /// config.erc20 must be a MetaMorpho ERC4626 vault

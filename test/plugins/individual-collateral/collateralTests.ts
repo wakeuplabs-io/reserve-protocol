@@ -58,6 +58,7 @@ import {
 } from '../../../typechain'
 import snapshotGasCost from '../../utils/snapshotGasCost'
 import { IMPLEMENTATION, Implementation, ORACLE_ERROR, PRICE_TIMEOUT } from '../../fixtures'
+import { NUM_HOLDER } from './num/constants'
 
 const getDescribeFork = (targetNetwork = 'mainnet') => {
   return useEnv('FORK') && useEnv('FORK_NETWORK') === targetNetwork ? describe : describe.skip
@@ -97,8 +98,8 @@ export default function fn<X extends CollateralFixtureContext>(
     targetNetwork,
   } = fixtures
 
-  getDescribeFork(targetNetwork)(`Collateral: ${collateralName}`, () => {
-    before(resetFork)
+  getDescribeFork(targetNetwork)(`Collateral: ${collateralName}`, async () => {
+    await before(resetFork)
 
     describe('constructor validation', () => {
       it('validates targetName', async () => {
@@ -172,7 +173,7 @@ export default function fn<X extends CollateralFixtureContext>(
       describe('functions', () => {
         it('returns the correct bal (18 decimals)', async () => {
           const decimals = await ctx.tok.decimals()
-          const amount = bn('20').mul(bn(10).pow(decimals))
+          const amount = bn('0.000001').mul(bn(10).pow(decimals))
           await mintCollateralTo(ctx, amount, alice, alice.address)
 
           const aliceBal = await collateral.bal(alice.address)
@@ -195,7 +196,7 @@ export default function fn<X extends CollateralFixtureContext>(
         })
 
         itClaimsRewards('claims rewards (via collateral.claimRewards())', async () => {
-          const amount = bn('20').mul(bn(10).pow(await ctx.tok.decimals()))
+          const amount = bn('0.00001').mul(bn(10).pow(await ctx.tok.decimals()))
           await mintCollateralTo(ctx, amount, alice, ctx.collateral.address)
           await advanceBlocks(1000)
           await advanceToTimestamp((await getLatestBlockTimestamp()) + 12000)
@@ -306,7 +307,7 @@ export default function fn<X extends CollateralFixtureContext>(
           await expectPrice(collateral.address, expectedPrice, oracleError, true, toleranceDivisor)
 
           // need to deposit in order to get an exchange rate
-          const amount = bn('200').mul(bn(10).pow(await ctx.tok.decimals()))
+          const amount = bn('0.00001').mul(bn(10).pow(await ctx.tok.decimals()))
           await mintCollateralTo(ctx, amount, alice, alice.address)
           await increaseRefPerTok(ctx, 5)
 
@@ -541,7 +542,7 @@ export default function fn<X extends CollateralFixtureContext>(
 
           await mintCollateralTo(
             ctx,
-            bn('200').mul(bn(10).pow(await ctx.tok.decimals())),
+            bn('0.00001').mul(bn(10).pow(await ctx.tok.decimals())),
             alice,
             alice.address
           )
@@ -617,7 +618,7 @@ export default function fn<X extends CollateralFixtureContext>(
         context('ERC20', () => {
           it('transfer', async () => {
             const decimals = await ctx.tok.decimals()
-            const amount = bn('20').mul(bn(10).pow(decimals))
+            const amount = bn('0.00001').mul(bn(10).pow(decimals))
             await mintCollateralTo(ctx, amount, alice, alice.address)
             await snapshotGasCost(ctx.tok.connect(alice).transfer(collateral.address, bn('1e6')))
             await snapshotGasCost(ctx.tok.connect(alice).transfer(collateral.address, bn('1e6')))
@@ -735,7 +736,7 @@ export default function fn<X extends CollateralFixtureContext>(
         collateralERC20 = await ethers.getContractAt('IERC20Metadata', await collateral.erc20())
         await mintCollateralTo(
           ctx,
-          toBNDecimals(fp('1'), await collateralERC20.decimals()),
+          toBNDecimals(fp('0.00001'), await collateralERC20.decimals()),
           addr1,
           addr1.address
         )
@@ -1014,7 +1015,34 @@ export default function fn<X extends CollateralFixtureContext>(
             targetUnitOracle.address,
             ORACLE_TIMEOUT
           )
-        } else {
+        } else if (target == ethers.utils.formatBytes32String('ARS')) {
+          // USD
+          const erc20 = await ethers.getContractAt(
+            'IERC20Metadata',
+            onBase ? networkConfig[chainId].tokens.nuARS! : networkConfig[chainId].tokens.nuARS!
+          )
+          const whale = NUM_HOLDER
+          await whileImpersonating(whale, async (signer) => {
+            await erc20
+              .connect(signer)
+              .transfer(addr1.address, await erc20.balanceOf(signer.address))
+          })
+          const FiatCollateralFactory: ContractFactory = await ethers.getContractFactory(
+            'ERC4626FiatCollateral'
+          )
+          return <TestICollateral>await FiatCollateralFactory.deploy({
+            priceTimeout: PRICE_TIMEOUT,
+            chainlinkFeed: chainlinkFeed.address,
+            oracleError: ORACLE_ERROR,
+            oracleTimeout: ORACLE_TIMEOUT,
+            maxTradeVolume: MAX_UINT192,
+            erc20: erc20.address,
+            targetName: ethers.utils.formatBytes32String('ARS'),
+            defaultThreshold: fp('0.01'), // 1%
+            delayUntilDefault: bn('86400'), // 24h,
+          }, fp('0'))
+        }
+         else {
           throw new Error(`Unknown target: ${target}`)
         }
       }

@@ -36,11 +36,13 @@ const makeFiatCollateralTestSuite = (
 ) => {
   const deployCollateral = async (opts: MAFiatCollateralOpts = {}): Promise<TestICollateral> => {
     opts = { ...defaultCollateralOpts, ...opts }
-
+    //console.log(`deployCollateral ${collateralName}`, opts)
     const NumCollateralFactory: ContractFactory = await ethers.getContractFactory(
       'NumFiatCollateral'
     )
-    const collateral = <TestICollateral>await NumCollateralFactory.deploy(
+    let collateral: TestICollateral
+    try {
+      collateral = <TestICollateral>await NumCollateralFactory.deploy(
       {
         erc20: opts.erc20,
         targetName: opts.targetName,
@@ -56,13 +58,18 @@ const makeFiatCollateralTestSuite = (
       { gasLimit: 2000000000 }
     )
     await collateral.deployed()
-
     // Push forward chainlink feed
     await pushOracleForward(opts.chainlinkFeed!)
-
     await expect(collateral.refresh())
-
+    console.log(`deployCollateral refreshed`)
     return collateral
+
+    } catch (error) {
+      console.log(`Error deploying collateral`, error)
+      throw error
+    }
+    
+   
   }
 
   type Fixture<T> = () => Promise<T>
@@ -88,11 +95,12 @@ const makeFiatCollateralTestSuite = (
       if (!opts.maxTradeVolume || !MAX_UINT192.eq(opts.maxTradeVolume)) {
         const mockNumFactory = await ethers.getContractFactory('MockNum4626')
         const mockERC4626 = await mockNumFactory.deploy(opts.erc20!)
+        //console.log('mockERC4626', mockERC4626)
         opts.erc20 = mockERC4626.address
-      }
-
+      }     
       const collateral = await deployCollateral({ ...opts })
       const tok = await ethers.getContractAt('IERC20Metadata', await collateral.erc20())
+     
       return {
         alice,
         collateral,
@@ -170,7 +178,7 @@ const makeFiatCollateralTestSuite = (
     collateralName,
     chainlinkDefaultAnswer: defaultCollateralOpts.defaultPrice!,
     itIsPricedByPeg: true,
-    toleranceDivisor: bn('1e9'), // 1 part in 1 billion
+    toleranceDivisor: bn('1e10'), // 1 part in 1 billion
   }
 
   collateralTests(opts)
@@ -183,7 +191,7 @@ const makeOpts = (
   oracleError: BigNumber
 ): MAFiatCollateralOpts => {
   return {
-    targetName: ethers.utils.formatBytes32String('USD'),
+    targetName: ethers.utils.formatBytes32String('ARS'),
     priceTimeout: PRICE_TIMEOUT,
     oracleTimeout: oracleTimeout,
     oracleError: oracleError,
@@ -203,7 +211,7 @@ const makeOpts = (
 */
 const { tokens, chainlinkFeeds } = networkConfig[8453]
 makeFiatCollateralTestSuite(
-  'NumFiatCollateral - steakUSDC',
+  'NumFiatCollateral - steak NUARS',
   makeOpts(tokens.nuARS!, chainlinkFeeds.nuARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
 )
 /* makeFiatCollateralTestSuite(
