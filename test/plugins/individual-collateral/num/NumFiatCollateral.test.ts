@@ -23,7 +23,7 @@ import {
   USDC_ORACLE_ERROR,
   PRICE_TIMEOUT,
 } from './constants'
-import { mintCollateralTo } from './mintCollateralTo'
+import { mintCollateralTo } from './helpers'
 
 interface MAFiatCollateralOpts extends CollateralOpts {
   defaultPrice?: BigNumberish
@@ -36,7 +36,6 @@ const makeFiatCollateralTestSuite = (
 ) => {
   const deployCollateral = async (opts: MAFiatCollateralOpts = {}): Promise<TestICollateral> => {
     opts = { ...defaultCollateralOpts, ...opts }
-    //console.log(`deployCollateral ${collateralName}`, opts)
     const NumCollateralFactory: ContractFactory = await ethers.getContractFactory(
       'NumFiatCollateral'
     )
@@ -61,7 +60,6 @@ const makeFiatCollateralTestSuite = (
     // Push forward chainlink feed
     await pushOracleForward(opts.chainlinkFeed!)
     await expect(collateral.refresh())
-    console.log(`deployCollateral refreshed`)
     return collateral
 
     } catch (error) {
@@ -95,7 +93,6 @@ const makeFiatCollateralTestSuite = (
       if (!opts.maxTradeVolume || !MAX_UINT192.eq(opts.maxTradeVolume)) {
         const mockNumFactory = await ethers.getContractFactory('MockNum4626')
         const mockERC4626 = await mockNumFactory.deploy(opts.erc20!)
-        //console.log('mockERC4626', mockERC4626)
         opts.erc20 = mockERC4626.address
       }     
       const collateral = await deployCollateral({ ...opts })
@@ -211,8 +208,8 @@ const makeOpts = (
 */
 const { tokens, chainlinkFeeds } = networkConfig[8453]
 makeFiatCollateralTestSuite(
-  'NumFiatCollateral - steak NUARS',
-  makeOpts(tokens.nuARS!, chainlinkFeeds.nuARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
+  'NumFiatCollateral - steak nuARS',
+  makeOpts(tokens.snuARS!, chainlinkFeeds.snuARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
 )
 /* makeFiatCollateralTestSuite(
   'MetaMorphoFiatCollateral - steakPYUSD',

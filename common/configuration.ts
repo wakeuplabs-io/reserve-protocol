@@ -118,7 +118,7 @@ export interface ITokens {
   wUSDM?: string
 
   // NUM
-  nuARS?: string
+  snuARS?: string
 }
 
 export type ITokensKeys = Array<keyof ITokens>
@@ -520,7 +520,7 @@ export const networkConfig: { [key: string]: INetworkConfig } = {
       sUSDbC: '0x4c80e24119cfb836cdf0a6b53dc23f04f7e652ca',
       wstETH: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452',
       STG: '0xE3B53AF74a4BF62Ae5511055290838050bf764Df',
-      nuARS: '0xC1F4C75e8925A67BE4F35D6b1c044B5ea8849a58',
+      snuARS: '0xC1F4C75e8925A67BE4F35D6b1c044B5ea8849a58',
     },
     chainlinkFeeds: {
       DAI: '0x591e79239a7d679378ec8c847e5038150364c78f', // 0.3%, 24hr
@@ -537,7 +537,7 @@ export const networkConfig: { [key: string]: INetworkConfig } = {
       stETHETH: '0xf586d0728a47229e747d824a939000Cf21dEF5A0', // 0.5%, 24h
       ETHUSD: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70', // 0.15%, 20min
       wstETHstETH: '0xB88BAc61a4Ca37C43a3725912B1f472c9A5bc061', // 0.5%, 24h,
-      nuARS: '0xC3a426Ef79fd60A4cA785FC04a2C3cB09d2FEeae',
+      snuARS: '0xC3a426Ef79fd60A4cA785FC04a2C3cB09d2FEeae',
     },
     GNOSIS_EASY_AUCTION: '0xb1875Feaeea32Bbb02DE83D81772e07E37A40f02', // mock
     COMET_REWARDS: '0x123964802e6ABabBE1Bc9547D72Ef1B69B00A6b1',

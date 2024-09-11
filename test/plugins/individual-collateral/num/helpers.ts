@@ -19,10 +19,7 @@ export const mintCollateralTo: MintCollateralFunc<CollateralFixtureContext> = as
   _: SignerWithAddress,
   recipient: string
 ) => {
-  console.log('ctx.tok.address', ctx.tok.address)
   const tok = await ethers.getContractAt('MockNum4626', ctx.tok.address)
-
-  // It can be a MockMetaMorpho4626 or the real ERC4626
   try {
     // treat it as a wrapper to begin
     const actual = await tok.actual();

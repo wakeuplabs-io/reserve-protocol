@@ -49,9 +49,9 @@ async function main() {
   const collateral = <SFraxCollateral>await nuARSCollateralFactory.connect(deployer).deploy(
     {
       priceTimeout: priceTimeout.toString(),
-      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.nuARS,
+      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.snuARS,
       oracleError: fp('0.01').toString(), // 1%
-      erc20: networkConfig[chainId].tokens.nuARS,
+      erc20: networkConfig[chainId].tokens.snuARS,
       maxTradeVolume: fp('1e6').toString(), // $1m,
       oracleTimeout: '3600', // 1 hr
       targetName: hre.ethers.utils.formatBytes32String('ARS'),
@@ -62,12 +62,12 @@ async function main() {
   )
   await collateral.deployed()
 
-  console.log(`Deployed nuARS to ${hre.network.name} (${chainId}): ${collateral.address}`)
+  console.log(`Deployed snuARS to ${hre.network.name} (${chainId}): ${collateral.address}`)
   await (await collateral.refresh()).wait()
   expect(await collateral.status()).to.equal(CollateralStatus.SOUND)
 
-  assetCollDeployments.collateral.nuARS = collateral.address
-  assetCollDeployments.erc20s.nuARS = networkConfig[chainId].tokens.nuARS
+  assetCollDeployments.collateral.snuARS = collateral.address
+  assetCollDeployments.erc20s.snuARS = networkConfig[chainId].tokens.snuARS
   deployedCollateral.push(collateral.address.toString())
 
   fs.writeFileSync(assetCollDeploymentFilename, JSON.stringify(assetCollDeployments, null, 2))
