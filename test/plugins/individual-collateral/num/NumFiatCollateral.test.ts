@@ -15,10 +15,6 @@ import { MAX_UINT192 } from '#/common/constants'
 import {
   DELAY_UNTIL_DEFAULT,
   FORK_BLOCK,
-  PYUSD_ORACLE_ERROR,
-  PYUSD_ORACLE_TIMEOUT,
-  USDT_ORACLE_TIMEOUT,
-  USDT_ORACLE_ERROR,
   USDC_ORACLE_TIMEOUT,
   USDC_ORACLE_ERROR,
   PRICE_TIMEOUT,
@@ -211,11 +207,3 @@ makeFiatCollateralTestSuite(
   'NumFiatCollateral - steak nuARS',
   makeOpts(tokens.snuARS!, chainlinkFeeds.snuARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
 )
-/* makeFiatCollateralTestSuite(
-  'MetaMorphoFiatCollateral - steakPYUSD',
-  makeOpts(tokens.steakPYUSD!, chainlinkFeeds.pyUSD!, PYUSD_ORACLE_TIMEOUT, PYUSD_ORACLE_ERROR)
-)
-makeFiatCollateralTestSuite(
-  'MetaMorphoFiatCollateral - bbUSDT',
-  makeOpts(tokens.bbUSDT!, chainlinkFeeds.USDT!, USDT_ORACLE_TIMEOUT, USDT_ORACLE_ERROR)
-) */
