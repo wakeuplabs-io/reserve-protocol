@@ -731,9 +731,10 @@ export default function fn<X extends CollateralFixtureContext>(
         await pairedColl.refresh()
         expect(await pairedColl.status()).to.equal(CollateralStatus.SOUND)
         pairedERC20 = await ethers.getContractAt('ERC20Mock', await pairedColl.erc20())
-
+        console.log('pairedERC20', pairedERC20.address)
         // Prep collateral
         collateralERC20 = await ethers.getContractAt('IERC20Metadata', await collateral.erc20())
+        console.log('collateralERC20', collateralERC20.address)
         await mintCollateralTo(
           ctx,
           toBNDecimals(fp('0.00001'), await collateralERC20.decimals()),
@@ -811,7 +812,7 @@ export default function fn<X extends CollateralFixtureContext>(
         await rToken.connect(addr1).issue(supply)
       })
 
-      it('can be put into an RToken basket', async () => {
+      it.only('can be put into an RToken basket', async () => {
         await assetRegistry.refresh()
         expect(await basketHandler.status()).to.equal(CollateralStatus.SOUND)
       })
@@ -1016,7 +1017,7 @@ export default function fn<X extends CollateralFixtureContext>(
             ORACLE_TIMEOUT
           )
         } else if (target == ethers.utils.formatBytes32String('ARS')) {
-          // USD
+          // ARS
           const erc20 = await ethers.getContractAt(
             'IERC20Metadata',
             onBase ? networkConfig[chainId].tokens.nuARS! : networkConfig[chainId].tokens.nuARS!
