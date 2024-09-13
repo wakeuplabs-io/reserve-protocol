@@ -22,14 +22,36 @@ export const mintCollateralTo: MintCollateralFunc<CollateralFixtureContext> = as
   const tok = await ethers.getContractAt('MockNum4626', ctx.tok.address)
   try {
     // treat it as a wrapper to begin
-    const actual = await tok.actual();
+    const actual = await tok.actual()
     const underlying = await ethers.getContractAt('IERC20Metadata', actual)
     // Transfer the underlying (real) ERC4626; wrapper is pass-through
     await whileImpersonating(hre, NUM_HOLDER, async (whaleSigner) => {
       await underlying.connect(whaleSigner).transfer(recipient, amount)
     })
+  } catch (e) {
+    console.log('mintCollateralTo error', e)
+    // if we error out, then it's not the wrapper we're dealing with
+    await whileImpersonating(hre, NUM_HOLDER, async (whaleSigner) => {
+      await ctx.tok.connect(whaleSigner).transfer(recipient, amount)
+    })
+  }
+}
 
-  } catch(e) {
+export const mintNARSTo: MintCollateralFunc<CollateralFixtureContext> = async (
+  ctx: CollateralFixtureContext,
+  amount: BigNumberish,
+  _: SignerWithAddress,
+  recipient: string
+) => {
+  //const tok = await ethers.getContractAt('MockableCollateral', ctx.tok.address)
+  try {
+    // treat it as a wrapper to begin
+    const underlying = await ethers.getContractAt('IERC20Metadata', ctx.tok.address)
+    // Transfer the underlying (real) ERC4626; wrapper is pass-through
+    await whileImpersonating(hre, NUM_HOLDER, async (whaleSigner) => {
+      await underlying.connect(whaleSigner).transfer(recipient, amount)
+    })
+  } catch (e) {
     console.log('mintCollateralTo error', e)
     // if we error out, then it's not the wrapper we're dealing with
     await whileImpersonating(hre, NUM_HOLDER, async (whaleSigner) => {

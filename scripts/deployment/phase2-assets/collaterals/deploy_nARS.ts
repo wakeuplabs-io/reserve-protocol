@@ -2,7 +2,7 @@ import fs from 'fs'
 import hre from 'hardhat'
 import { getChainId } from '../../../../common/blockchain-utils'
 import { networkConfig } from '../../../../common/configuration'
-import { bn, fp } from '../../../../common/numbers'
+import { fp } from '../../../../common/numbers'
 import { expect } from 'chai'
 import { CollateralStatus } from '../../../../common/constants'
 import {
@@ -12,9 +12,14 @@ import {
   getDeploymentFilename,
   fileExists,
 } from '../../common'
-import { priceTimeout } from '../../utils'
-import { SFraxCollateral } from '../../../../typechain'
+import { NARSCollateral } from '../../../../typechain'
 import { ContractFactory } from 'ethers'
+import {
+  DELAY_UNTIL_DEFAULT,
+  PRICE_TIMEOUT,
+  ORACLE_TIMEOUT,
+  ORACLE_ERROR,
+} from '../../../../test/plugins/individual-collateral/ethena/constants'
 
 async function main() {
   // ==== Read Configuration ====
@@ -40,34 +45,37 @@ async function main() {
 
   const deployedCollateral: string[] = []
 
-  /********  Deploy nuARS Collateral - nuARS  **************************/
+  /********  Deploy NARS Collateral - ARS  **************************/
 
-  const nuARSCollateralFactory: ContractFactory = await hre.ethers.getContractFactory(
-    'NumFiatCollateral'
+  const NARSFiatCollateralFactory: ContractFactory = await hre.ethers.getContractFactory(
+    'NARSCollateral'
   )
 
-  const collateral = <SFraxCollateral>await nuARSCollateralFactory.connect(deployer).deploy(
+  const collateral = <NARSCollateral>await NARSFiatCollateralFactory.connect(deployer).deploy(
     {
-      priceTimeout: priceTimeout.toString(),
-      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.snuARS,
-      oracleError: fp('0.01').toString(), // 1%
-      erc20: networkConfig[chainId].tokens.snuARS,
+      priceTimeout: PRICE_TIMEOUT.toString(),
+      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.nARS,
+      oracleError: ORACLE_ERROR.toString(),
+      erc20: networkConfig[chainId].tokens.sUSDe,
       maxTradeVolume: fp('1e6').toString(), // $1m,
-      oracleTimeout: '3600', // 1 hr
+      oracleTimeout: ORACLE_TIMEOUT.toString(), // 24 hr
       targetName: hre.ethers.utils.formatBytes32String('ARS'),
-      defaultThreshold: fp('0.02').toString(), // 2% = 1% oracleError + 1% buffer
-      delayUntilDefault: bn('86400').toString(), // 24h
+      defaultThreshold: fp('0.01').add(ORACLE_ERROR).toString(), // ~1.5%
+      delayUntilDefault: DELAY_UNTIL_DEFAULT.toString(), // 72h
     },
-    '0' // revenueHiding = 0
+    fp('1e-6').toString()
   )
+
   await collateral.deployed()
 
-  console.log(`Deployed snuARS to ${hre.network.name} (${chainId}): ${collateral.address}`)
+  console.log(
+    `Deployed NARS (ARS) Collateral to ${hre.network.name} (${chainId}): ${collateral.address}`
+  )
   await (await collateral.refresh()).wait()
   expect(await collateral.status()).to.equal(CollateralStatus.SOUND)
 
-  assetCollDeployments.collateral.snuARS = collateral.address
-  assetCollDeployments.erc20s.snuARS = networkConfig[chainId].tokens.snuARS
+  assetCollDeployments.collateral.nARS = collateral.address
+  assetCollDeployments.erc20s.nARS = networkConfig[chainId].tokens.nARS
   deployedCollateral.push(collateral.address.toString())
 
   fs.writeFileSync(assetCollDeploymentFilename, JSON.stringify(assetCollDeployments, null, 2))

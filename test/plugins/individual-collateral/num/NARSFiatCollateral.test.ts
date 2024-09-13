@@ -3,7 +3,7 @@ import { bn, fp } from '#/common/numbers'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { MockV3Aggregator } from '@typechain/MockV3Aggregator'
 import { TestICollateral } from '@typechain/TestICollateral'
-import { MockV3Aggregator__factory } from '@typechain/index'
+import { IERC20Metadata, MockV3Aggregator__factory } from '@typechain/index'
 import { expect } from 'chai'
 import { BigNumber, BigNumberish, ContractFactory } from 'ethers'
 import { ethers } from 'hardhat'
@@ -18,8 +18,11 @@ import {
   USDC_ORACLE_TIMEOUT,
   USDC_ORACLE_ERROR,
   PRICE_TIMEOUT,
+  NUM_HOLDER,
 } from './constants'
-import { mintCollateralTo } from './helpers'
+import { mintNARSTo } from './helpers'
+import { whileImpersonating } from '#/test/utils/impersonation'
+const { tokens, chainlinkFeeds } = networkConfig[8453]
 
 interface MAFiatCollateralOpts extends CollateralOpts {
   defaultPrice?: BigNumberish
@@ -32,14 +35,10 @@ const makeFiatCollateralTestSuite = (
 ) => {
   const deployCollateral = async (opts: MAFiatCollateralOpts = {}): Promise<TestICollateral> => {
     opts = { ...defaultCollateralOpts, ...opts }
-    const NumCollateralFactory: ContractFactory = await ethers.getContractFactory(
-      'NumFiatCollateral'
-    )
+    const NumCollateralFactory: ContractFactory = await ethers.getContractFactory('NARSCollateral')
     let collateral: TestICollateral
     try {
-      collateral = <TestICollateral>await NumCollateralFactory.deploy(
-      {
-        erc20: opts.erc20,
+      collateral = <TestICollateral>await NumCollateralFactory.deploy({
         targetName: opts.targetName,
         priceTimeout: opts.priceTimeout,
         chainlinkFeed: opts.chainlinkFeed,
@@ -48,22 +47,17 @@ const makeFiatCollateralTestSuite = (
         maxTradeVolume: opts.maxTradeVolume,
         defaultThreshold: opts.defaultThreshold,
         delayUntilDefault: opts.delayUntilDefault,
-      },
-      opts.revenueHiding,
-      { gasLimit: 2000000000 }
-    )
-    await collateral.deployed()
-    // Push forward chainlink feed
-    await pushOracleForward(opts.chainlinkFeed!)
-    await expect(collateral.refresh())
-    return collateral
-
+        erc20: opts.erc20,
+      })
+      await collateral.deployed()
+      // Push forward chainlink feed
+      await pushOracleForward(opts.chainlinkFeed!)
+      await expect(collateral.refresh())
+      return collateral
     } catch (error) {
       console.log(`Error deploying collateral`, error)
       throw error
     }
-    
-   
   }
 
   type Fixture<T> = () => Promise<T>
@@ -84,16 +78,9 @@ const makeFiatCollateralTestSuite = (
       )
       opts.chainlinkFeed = chainlinkFeed.address
 
-      // Hack: use wrapped vault by default unless the maxTradeVolume is infinite, in which
-      //       case the mock would break things. Care! Fragile!
-      if (!opts.maxTradeVolume || !MAX_UINT192.eq(opts.maxTradeVolume)) {
-        const mockNumFactory = await ethers.getContractFactory('MockNum4626')
-        const mockERC4626 = await mockNumFactory.deploy(opts.erc20!)
-        opts.erc20 = mockERC4626.address
-      }     
       const collateral = await deployCollateral({ ...opts })
       const tok = await ethers.getContractAt('IERC20Metadata', await collateral.erc20())
-     
+
       return {
         alice,
         collateral,
@@ -117,14 +104,35 @@ const makeFiatCollateralTestSuite = (
     await ctx.chainlinkFeed.updateAnswer(nextAnswer)
   }
 
-  const reduceRefPerTok = async (ctx: CollateralFixtureContext, pctDecrease: BigNumberish) => {
-    const mockERC4626 = await ethers.getContractAt('MockNum4626', ctx.tok.address)
-    await mockERC4626.applyMultiple(bn('100').sub(pctDecrease).mul(fp('1')).div(100))
-  }
+  // prettier-ignore
+  const reduceRefPerTok = async (
+  ctx: CollateralFixtureContext,
+  pctDecrease: BigNumberish
+) => {
+  const nars = <IERC20Metadata>await ethers.getContractAt("IERC20Metadata", tokens.nARS!)
+  const currentBal = await nars.balanceOf(ctx.tok.address)
+  const removeBal = currentBal.mul(pctDecrease).div(100)
+  await whileImpersonating(ctx.tok.address, async (signer) => {
+    await nars.connect(signer).transfer(NUM_HOLDER, removeBal)
+  })
+
+  // push chainlink oracle forward so that tryPrice() still works and keeps peg
+  const latestRoundData = await ctx.chainlinkFeed.latestRoundData()
+  const nextAnswer = latestRoundData.answer.sub(latestRoundData.answer.mul(pctDecrease).div(100))
+  await ctx.chainlinkFeed.updateAnswer(nextAnswer)
+}
 
   const increaseRefPerTok = async (ctx: CollateralFixtureContext, pctIncrease: BigNumberish) => {
-    const mockERC4626 = await ethers.getContractAt('MockNum4626', ctx.tok.address)
-    await mockERC4626.applyMultiple(bn('100').add(pctIncrease).mul(fp('1')).div(100))
+    const nars = <IERC20Metadata>await ethers.getContractAt('IERC20Metadata', tokens.nARS!)
+
+    const currentBal = await nars.balanceOf(ctx.tok.address)
+    const addBal = currentBal.mul(pctIncrease).div(100)
+    await mintNARSTo(ctx, addBal, ctx.alice!, ctx.tok.address)
+
+    // push chainlink oracle forward so that tryPrice() still works and keeps peg
+    const latestRoundData = await ctx.chainlinkFeed.latestRoundData()
+    const nextAnswer = latestRoundData.answer.add(latestRoundData.answer.mul(pctIncrease).div(100))
+    await ctx.chainlinkFeed.updateAnswer(nextAnswer)
   }
 
   const getExpectedPrice = async (ctx: CollateralFixtureContext): Promise<BigNumber> => {
@@ -154,7 +162,7 @@ const makeFiatCollateralTestSuite = (
     collateralSpecificStatusTests,
     beforeEachRewardsTest,
     makeCollateralFixtureContext,
-    mintCollateralTo,
+    mintCollateralTo: mintNARSTo,
     reduceTargetPerRef,
     increaseTargetPerRef,
     reduceRefPerTok,
@@ -178,7 +186,7 @@ const makeFiatCollateralTestSuite = (
 }
 
 const makeOpts = (
-  vault: string,
+  erc20: string,
   chainlinkFeed: string,
   oracleTimeout: BigNumber,
   oracleError: BigNumber
@@ -194,7 +202,7 @@ const makeOpts = (
     revenueHiding: fp('0'),
     defaultPrice: bn('1e8'),
     defaultRefPerTok: fp('1'),
-    erc20: vault,
+    erc20: erc20,
     chainlinkFeed,
   }
 }
@@ -202,8 +210,8 @@ const makeOpts = (
 /*
   Run the test suite
 */
-const { tokens, chainlinkFeeds } = networkConfig[8453]
+
 makeFiatCollateralTestSuite(
-  'NumFiatCollateral - steak nuARS',
-  makeOpts(tokens.snuARS!, chainlinkFeeds.snuARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
+  'NumFiatCollateral - steak nARS',
+  makeOpts(tokens.nARS!, chainlinkFeeds.nARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
 )
