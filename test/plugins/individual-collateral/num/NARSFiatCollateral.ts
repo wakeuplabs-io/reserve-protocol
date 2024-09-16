@@ -180,6 +180,7 @@ const makeFiatCollateralTestSuite = (
     chainlinkDefaultAnswer: defaultCollateralOpts.defaultPrice!,
     itIsPricedByPeg: true,
     toleranceDivisor: bn('1e10'), // 1 part in 1 billion
+    targetNetwork: 'base',
   }
 
   collateralTests(opts)
@@ -212,6 +213,6 @@ const makeOpts = (
 */
 
 makeFiatCollateralTestSuite(
-  'NumFiatCollateral - steak nARS',
+  'NumFiatCollateral - nARS',
   makeOpts(tokens.nARS!, chainlinkFeeds.nARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
 )

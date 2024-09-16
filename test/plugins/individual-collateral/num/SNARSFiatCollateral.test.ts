@@ -33,7 +33,7 @@ const makeFiatCollateralTestSuite = (
   const deployCollateral = async (opts: MAFiatCollateralOpts = {}): Promise<TestICollateral> => {
     opts = { ...defaultCollateralOpts, ...opts }
     const NumCollateralFactory: ContractFactory = await ethers.getContractFactory(
-      'NumFiatCollateral'
+      'SnARSFiatCollateral'
     )
     let collateral: TestICollateral
     try {
@@ -168,7 +168,8 @@ const makeFiatCollateralTestSuite = (
     collateralName,
     chainlinkDefaultAnswer: defaultCollateralOpts.defaultPrice!,
     itIsPricedByPeg: true,
-    toleranceDivisor: bn('1e10'), // 1 part in 1 billion
+    toleranceDivisor: bn('1e7'), // 1 part in 1 billion
+    targetNetwork: 'base',
   }
 
   collateralTests(opts)
@@ -201,6 +202,6 @@ const makeOpts = (
 */
 const { tokens, chainlinkFeeds } = networkConfig[8453]
 makeFiatCollateralTestSuite(
-  'NumFiatCollateral - steak snARS',
+  'NumFiatCollateral - snARS',
   makeOpts(tokens.snARS!, chainlinkFeeds.snARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
 )

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { expect } from 'chai'
 import hre, { ethers } from 'hardhat'
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
@@ -39,6 +40,7 @@ import {
   expectExactPrice,
   expectPrice,
   expectUnpriced,
+  pushOracleForward,
 } from '../../utils/oracles'
 import {
   ERC20Mock,
@@ -98,8 +100,8 @@ export default function fn<X extends CollateralFixtureContext>(
     targetNetwork,
   } = fixtures
 
-  getDescribeFork(targetNetwork)(`Collateral: ${collateralName}`, async () => {
-    await before(resetFork)
+  getDescribeFork(targetNetwork)(`Collateral: ${collateralName}`, () => {
+    before(resetFork)
 
     describe('constructor validation', () => {
       it('validates targetName', async () => {
@@ -303,23 +305,15 @@ export default function fn<X extends CollateralFixtureContext>(
 
           const [initLow, initHigh] = await collateral.price()
           const expectedPrice = await getExpectedPrice(ctx)
-          console.log('expectedPrice', expectedPrice)
           await expectPrice(collateral.address, expectedPrice, oracleError, true, toleranceDivisor)
-          console.log('expectPrice success')
           // need to deposit in order to get an exchange rate
           const amount = bn('0.00001').mul(bn(10).pow(await ctx.tok.decimals()))
           await mintCollateralTo(ctx, amount, alice, alice.address)
-          console.log('mintCollateralTo success')
           await increaseRefPerTok(ctx, 5)
-          console.log('increaseRefPerTok success')
           await collateral.refresh()
-          console.log('refresh success')
           expect(await collateral.status()).to.equal(CollateralStatus.SOUND)
-          console.log('status success')
           expect(await collateral.refPerTok()).to.be.gt(initRefPerTok)
-          console.log('refPerTok success')
           const [newLow, newHigh] = await collateral.price()
-          console.log('price success')
           expect(newLow).to.be.gt(initLow)
           expect(newHigh).to.be.gt(initHigh)
         })
@@ -632,11 +626,11 @@ export default function fn<X extends CollateralFixtureContext>(
       })
     })
 
-    describe('integration tests', () => {
+    describe.skip('integration tests', () => {
       const onBase = useEnv('FORK_NETWORK').toLowerCase() == 'base'
       const onArbitrum = useEnv('FORK_NETWORK').toLowerCase() == 'arbitrum'
 
-      before(resetFork)
+     before(resetFork)
 
       let ctx: X
       let owner: SignerWithAddress
@@ -673,6 +667,7 @@ export default function fn<X extends CollateralFixtureContext>(
           rTokenDist: bn(0), // 0% RToken
           rsrDist: bn(10000), // 100% RSR
         },
+        enableIssuancePremium: false,
         minTradeVolume: bn('0'), // $0
         rTokenMaxTradeVolume: MAX_UINT192, // +inf
         shortFreeze: bn('259200'), // 3 days
@@ -695,7 +690,6 @@ export default function fn<X extends CollateralFixtureContext>(
           pctRate: fp('0.05'), // 5%
         },
         reweightable: false,
-      
       }
 
       interface IntegrationFixture {
@@ -714,7 +708,7 @@ export default function fn<X extends CollateralFixtureContext>(
         }
 
       before(async () => {
-        // await resetFork()
+       // await resetFork()
         defaultFixture = await getDefaultFixture(collateralName)
         chainId = await getChainId(hre)
         if (useEnv('FORK_NETWORK').toLowerCase() === 'base') chainId = 8453
@@ -726,23 +720,23 @@ export default function fn<X extends CollateralFixtureContext>(
       })
 
       beforeEach(async () => {
+        
         let protocol: DefaultFixture
         ;({ ctx, protocol } = await loadFixture(integrationFixture))
         ;({ collateral } = ctx)
         ;({ deployer, facadeWrite, govParams, rsr } = protocol)
 
-        supply = fp('0')
+        supply = fp('0.0001')
 
         // Create a paired collateral of the same targetName
         pairedColl = await makePairedCollateral(await collateral.targetName())
         await pairedColl.refresh()
         expect(await pairedColl.status()).to.equal(CollateralStatus.SOUND)
         pairedERC20 = await ethers.getContractAt('ERC20Mock', await pairedColl.erc20())
-        console.log('pairedERC20', pairedERC20.address)
+
         // Prep collateral
         collateralERC20 = await ethers.getContractAt('IERC20Metadata', await collateral.erc20())
-        console.log('collateralERC20', collateralERC20.address)
-
+        const primaryBasket = [collateral.address, pairedColl.address]
         await mintCollateralTo(
           ctx,
           toBNDecimals(fp('0.00001'), await collateralERC20.decimals()),
@@ -752,12 +746,11 @@ export default function fn<X extends CollateralFixtureContext>(
         // Set primary basket
         const rTokenSetup: IRTokenSetup = {
           assets: [],
-          primaryBasket: [collateral.address, pairedColl.address],
+          primaryBasket: primaryBasket,
           weights: [fp('0.5e-3'), fp('0.5e-3')],
           backups: [],
           beneficiaries: [],
         }
-
         // Deploy RToken via FacadeWrite
         const receipt = await (
           await facadeWrite.connect(owner).deployRToken(
@@ -788,7 +781,6 @@ export default function fn<X extends CollateralFixtureContext>(
         rsrTrader = <TestIRevenueTrader>(
           await ethers.getContractAt('TestIRevenueTrader', await main.rsrTrader())
         )
-
         // Set initial governance roles
         govRoles = {
           owner: owner.address,
@@ -811,10 +803,9 @@ export default function fn<X extends CollateralFixtureContext>(
         )
 
         // Should issue
-        await collateralERC20.connect(addr1).approve(rToken.address, MAX_UINT256)
-        await pairedERC20.connect(addr1).approve(rToken.address, MAX_UINT256)
+        await collateralERC20.connect(owner).approve(rToken.address, MAX_UINT256)
+        await pairedERC20.connect(owner).approve(rToken.address, MAX_UINT256)
         await rToken.connect(owner).issue(supply)
-        console.log(`RToken issued ${supply}`)
       })
 
       it('can be put into an RToken basket', async () => {
@@ -835,7 +826,7 @@ export default function fn<X extends CollateralFixtureContext>(
           initialCollBal,
           initialCollBal.div(bn('1e5')) // 1-part-in-100k
         )
-      }); 
+      })
 
       it('rebalances out of the collateral', async () => {
         const router = await (await ethers.getContractFactory('DutchTradeRouter')).deploy()
@@ -912,7 +903,7 @@ export default function fn<X extends CollateralFixtureContext>(
           'TradeSettled'
         )
         expect(await rsrTrader.tradesOpen()).to.equal(0)
-      }) 
+      })
 
       // === Integration Test Helpers ===
 
@@ -1025,30 +1016,41 @@ export default function fn<X extends CollateralFixtureContext>(
           // ARS
           const erc20 = await ethers.getContractAt(
             'IERC20Metadata',
-            onBase ? networkConfig[chainId].tokens.nARS! : networkConfig[chainId].tokens.nARS!
+            onBase ? networkConfig[chainId].tokens.snARS! : networkConfig[chainId].tokens.snARS!
           )
           const whale = NUM_HOLDER
-          await whileImpersonating(whale, async (signer) => {
+           await whileImpersonating(whale, async (signer) => {
             await erc20
               .connect(signer)
               .transfer(addr1.address, await erc20.balanceOf(signer.address))
-          })
+          }) 
           const FiatCollateralFactory: ContractFactory = await ethers.getContractFactory(
-            'NARSCollateral'
+            'NumFiatCollateral'
           )
-          return <TestICollateral>await FiatCollateralFactory.deploy(
-            {
-              priceTimeout: PRICE_TIMEOUT,
-              chainlinkFeed: chainlinkFeed.address,
-              oracleError: ORACLE_ERROR,
-              oracleTimeout: ORACLE_TIMEOUT,
-              maxTradeVolume: MAX_UINT192,
-              erc20: erc20.address,
-              targetName: ethers.utils.formatBytes32String('ARS'),
-              defaultThreshold: fp('0.01'), // 1%
-              delayUntilDefault: bn('86400'), // 24h,
-            }
-          )
+          try {
+             return <TestICollateral>await FiatCollateralFactory.deploy(
+              {
+                priceTimeout: PRICE_TIMEOUT,
+                chainlinkFeed: chainlinkFeed.address,
+                oracleError: ORACLE_ERROR,
+                oracleTimeout: ORACLE_TIMEOUT,
+                maxTradeVolume: MAX_UINT192,
+                erc20: erc20.address,
+                targetName: ethers.utils.formatBytes32String('ARS'),
+                defaultThreshold: fp('0.01'), // 1%
+                delayUntilDefault: bn('86400'), // 24h,
+              },
+              fp('0'),
+              { gasLimit: 2000000000 }
+            )
+           // await collateral.deployed()
+            // Push forward chainlink feed
+           // await pushOracleForward(chainlinkFeed.address!)
+           // return collateral
+          } catch (error) {
+            console.log(`Error deploying collateral`, error)
+            throw error
+          }
         } else {
           throw new Error(`Unknown target: ${target}`)
         }

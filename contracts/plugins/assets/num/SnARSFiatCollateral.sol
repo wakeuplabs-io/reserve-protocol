@@ -5,11 +5,11 @@ import { CollateralConfig } from "../AppreciatingFiatCollateral.sol";
 import { ERC4626FiatCollateral } from "../ERC4626FiatCollateral.sol";
 
 /**
- * @title NumFiatCollateral
+ * @title SnARSFiatCollateral
  * @notice Collateral plugin for a Num vault with fiat collateral
  * Expected: {tok} != {ref}, {ref} is pegged to {target} unless defaulting, {target} == {UoA}
  */
-contract NumFiatCollateral is ERC4626FiatCollateral {
+contract SnARSFiatCollateral is ERC4626FiatCollateral {
     /// config.erc20 must be a MetaMorpho ERC4626 vault
     /// @param config.chainlinkFeed Feed units: {UoA/ref}
     /// @param revenueHiding {1} A value like 1e-6 that represents the maximum refPerTok to hide

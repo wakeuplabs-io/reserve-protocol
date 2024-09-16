@@ -43,20 +43,16 @@ export const mintNARSTo: MintCollateralFunc<CollateralFixtureContext> = async (
   _: SignerWithAddress,
   recipient: string
 ) => {
-  //const tok = await ethers.getContractAt('MockableCollateral', ctx.tok.address)
   try {
     // treat it as a wrapper to begin
     const underlying = await ethers.getContractAt('IERC20Metadata', ctx.tok.address)
-    // Transfer the underlying (real) ERC4626; wrapper is pass-through
+    const balance = await underlying.balanceOf(NUM_HOLDER)
     await whileImpersonating(hre, NUM_HOLDER, async (whaleSigner) => {
       await underlying.connect(whaleSigner).transfer(recipient, amount)
     })
-  } catch (e) {
+  } catch (e: any) {
     console.log('mintCollateralTo error', e)
-    // if we error out, then it's not the wrapper we're dealing with
-    await whileImpersonating(hre, NUM_HOLDER, async (whaleSigner) => {
-      await ctx.tok.connect(whaleSigner).transfer(recipient, amount)
-    })
+    throw Error(e?.message || 'unknown error')
   }
 }
 
