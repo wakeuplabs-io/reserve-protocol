@@ -12,16 +12,14 @@ import {
   getDeploymentFilename,
   fileExists,
 } from '../../common'
-import { priceTimeout, combinedError } from '../../utils'
-import { ApxEthCollateral } from '../../../../typechain'
-import {
-  ETH_ORACLE_ERROR,
-  ETH_ORACLE_TIMEOUT,
-  APXETH_ORACLE_ERROR,
-  APXETH_ORACLE_TIMEOUT,
-  DELAY_UNTIL_DEFAULT,
-} from '../../../../test/plugins/individual-collateral/pirex-eth/constants'
+import { NARSCollateral } from '../../../../typechain'
 import { ContractFactory } from 'ethers'
+import {
+  DELAY_UNTIL_DEFAULT,
+  PRICE_TIMEOUT,
+  ORACLE_TIMEOUT,
+  ORACLE_ERROR,
+} from '../../../../test/plugins/individual-collateral/ethena/constants'
 
 async function main() {
   // ==== Read Configuration ====
@@ -47,39 +45,37 @@ async function main() {
 
   const deployedCollateral: string[] = []
 
-  /********  Deploy ApxETH Collateral - apxETH  **************************/
+  /********  Deploy NARS Collateral - ARS  **************************/
 
-  const ApxEthCollateralFactoryCollateralFactory: ContractFactory =
-    await hre.ethers.getContractFactory('ApxEthCollateral')
+  const NARSFiatCollateralFactory: ContractFactory = await hre.ethers.getContractFactory(
+    'NARSCollateral'
+  )
 
-  const oracleError = combinedError(ETH_ORACLE_ERROR, APXETH_ORACLE_ERROR) // 0.5% & 1%
-
-  const collateral = <ApxEthCollateral>await ApxEthCollateralFactoryCollateralFactory.connect(
-    deployer
-  ).deploy(
+  const collateral = <NARSCollateral>await NARSFiatCollateralFactory.connect(deployer).deploy(
     {
-      priceTimeout: priceTimeout.toString(),
-      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.ETH,
-      oracleError: oracleError.toString(),
-      erc20: networkConfig[chainId].tokens.apxETH,
+      priceTimeout: PRICE_TIMEOUT.toString(),
+      chainlinkFeed: networkConfig[chainId].chainlinkFeeds.nARS,
+      oracleError: ORACLE_ERROR.toString(),
+      erc20: networkConfig[chainId].tokens.sUSDe,
       maxTradeVolume: fp('1e6').toString(), // $1m,
-      oracleTimeout: ETH_ORACLE_TIMEOUT.toString(), // 1 hr,
-      targetName: hre.ethers.utils.formatBytes32String('ETH'),
-      defaultThreshold: fp('0.02').add(APXETH_ORACLE_ERROR).toString(), // 3%
+      oracleTimeout: ORACLE_TIMEOUT.toString(), // 24 hr
+      targetName: hre.ethers.utils.formatBytes32String('ARS'),
+      defaultThreshold: fp('0.01').add(ORACLE_ERROR).toString(), // ~1.5%
       delayUntilDefault: DELAY_UNTIL_DEFAULT.toString(), // 72h
     },
-    fp('1e-4').toString(), // revenueHiding = 0.01%
-    networkConfig[chainId].chainlinkFeeds.apxETH, // targetPerTokChainlinkFeed
-    APXETH_ORACLE_TIMEOUT.toString() // targetPerTokChainlinkTimeout - 24h
+    fp('1e-6').toString()
   )
+
   await collateral.deployed()
+
+  console.log(
+    `Deployed NARS (ARS) Collateral to ${hre.network.name} (${chainId}): ${collateral.address}`
+  )
   await (await collateral.refresh()).wait()
   expect(await collateral.status()).to.equal(CollateralStatus.SOUND)
 
-  console.log(`Deployed ApxETH to ${hre.network.name} (${chainId}): ${collateral.address}`)
-
-  assetCollDeployments.collateral.apxETH = collateral.address
-  assetCollDeployments.erc20s.apxETH = networkConfig[chainId].tokens.apxETH
+  assetCollDeployments.collateral.nARS = collateral.address
+  assetCollDeployments.erc20s.nARS = networkConfig[chainId].tokens.nARS
   deployedCollateral.push(collateral.address.toString())
 
   fs.writeFileSync(assetCollDeploymentFilename, JSON.stringify(assetCollDeployments, null, 2))
