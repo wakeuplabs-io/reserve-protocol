@@ -43,7 +43,7 @@ async function main() {
   /********  Deploy snARS Collateral - snARS  **************************/
 
   const nuARSCollateralFactory: ContractFactory = await hre.ethers.getContractFactory(
-    'NumFiatCollateral'
+    'FiatCollateral'
   )
 
   const collateral = <SFraxCollateral>await nuARSCollateralFactory.connect(deployer).deploy(

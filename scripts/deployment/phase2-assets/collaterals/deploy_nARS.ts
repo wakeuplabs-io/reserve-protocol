@@ -60,7 +60,7 @@ async function main() {
       maxTradeVolume: fp('1e6').toString(), // $1m,
       oracleTimeout: ORACLE_TIMEOUT.toString(), // 24 hr
       targetName: hre.ethers.utils.formatBytes32String('ARS'),
-      defaultThreshold: fp('0.01').add(ORACLE_ERROR).toString(), // ~1.5%
+      defaultThreshold: fp('0.01').add(ORACLE_ERROR).toString(), // ~1%
       delayUntilDefault: DELAY_UNTIL_DEFAULT.toString(), // 72h
     },
     fp('1e-6').toString()

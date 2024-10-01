@@ -200,6 +200,6 @@ const makeOpts = (
 */
 const { tokens, chainlinkFeeds } = networkConfig[8453]
 makeFiatCollateralTestSuite(
-  'NumFiatCollateral - snARS',
+  'FiatCollateral - snARS',
   makeOpts(tokens.snARS!, chainlinkFeeds.snARS!, ORACLE_TIMEOUT, ORACLE_ERROR)
 )

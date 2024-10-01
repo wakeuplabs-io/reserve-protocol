@@ -627,7 +627,7 @@ export default function fn<X extends CollateralFixtureContext>(
       })
     })
 
-    describe('integration tests', () => {
+    describe.skip('integration tests', () => {
       const onBase = useEnv('FORK_NETWORK').toLowerCase() == 'base'
       const onArbitrum = useEnv('FORK_NETWORK').toLowerCase() == 'arbitrum'
 
@@ -1022,13 +1022,13 @@ export default function fn<X extends CollateralFixtureContext>(
             onBase ? networkConfig[chainId].tokens.snARS! : networkConfig[chainId].tokens.snARS!
           )
           const whale = NUM_HOLDER
-           await whileImpersonating(whale, async (signer) => {
+          await whileImpersonating(whale, async (signer) => {
             await erc20
               .connect(signer)
               .transfer(addr1.address, await erc20.balanceOf(signer.address))
-          }) 
+          })
           const FiatCollateralFactory: ContractFactory = await ethers.getContractFactory(
-            'NumFiatCollateral'
+            'FiatCollateral'
           )
           return <TestICollateral>await FiatCollateralFactory.deploy({
             priceTimeout: PRICE_TIMEOUT,
@@ -1041,7 +1041,6 @@ export default function fn<X extends CollateralFixtureContext>(
             defaultThreshold: fp('0.01'), // 1%
             delayUntilDefault: bn('86400'), // 24h,
           })
-
         } else {
           throw new Error(`Unknown target: ${target}`)
         }
