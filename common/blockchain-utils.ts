@@ -32,7 +32,6 @@ export const getChainId = async (hre: HardhatRuntimeEnvironment): Promise<string
         break
     }
   }
-  console.log(`chainId: ${_chainId}`)
   return _chainId
 }
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 . "$(dirname "$0")/_/husky.sh"
 
-#set -exuo pipefail
+set -exuo pipefail
 
-#yarn lint && \
-#yarn compile && \
-#yarn test:fast
+yarn lint && \
+yarn compile && \
+yarn test:fast

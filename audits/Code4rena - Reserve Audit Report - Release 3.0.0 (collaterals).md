@@ -1,9 +1,9 @@
 ---
-sponsor: 'Reserve'
-slug: '2023-07-reserve'
-date: '2023-11-13'
-title: 'Reserve Protocol - Invitational'
-findings: 'https://github.com/code-423n4/2023-07-reserve-findings/issues'
+sponsor: "Reserve"
+slug: "2023-07-reserve"
+date: "2023-11-13"
+title: "Reserve Protocol - Invitational"
+findings: "https://github.com/code-423n4/2023-07-reserve-findings/issues"
 contest: 268
 ---
 
@@ -23,13 +23,13 @@ Following the C4 audit, 3 wardens ([ronnyx2017](https://code4rena.com/@ronnyx201
 
 In Code4rena's Invitational audits, the competition is limited to a small group of wardens; for this audit, 7 wardens contributed reports::
 
-1. [ronnyx2017](https://code4rena.com/@ronnyx2017)
-2. [bin2chen](https://code4rena.com/@bin2chen)
-3. [RaymondFam](https://code4rena.com/@RaymondFam)
-4. [0xA5DF](https://code4rena.com/@0xA5DF)
-5. [auditor0517](https://code4rena.com/@auditor0517)
-6. [sces60107](https://code4rena.com/@sces60107)
-7. [carlitox477](https://code4rena.com/@carlitox477)
+  1. [ronnyx2017](https://code4rena.com/@ronnyx2017)
+  2. [bin2chen](https://code4rena.com/@bin2chen)
+  3. [RaymondFam](https://code4rena.com/@RaymondFam)
+  4. [0xA5DF](https://code4rena.com/@0xA5DF)
+  5. [auditor0517](https://code4rena.com/@auditor0517)
+  6. [sces60107](https://code4rena.com/@sces60107)
+  7. [carlitox477](https://code4rena.com/@carlitox477)
 
 This audit was judged by [cccz](https://code4rena.com/@cccz).
 
@@ -61,10 +61,8 @@ High-level considerations for vulnerabilities span the following key areas when 
 For more information regarding the severity criteria referenced throughout the submission review process, please refer to the documentation provided on [the C4 website](https://code4rena.com), specifically our section on [Severity Categorization](https://docs.code4rena.com/awarding/judging-criteria/severity-categorization).
 
 # High Risk Findings (3)
-
 ## [[H-01] CBEthCollateral and AnkrStakedEthCollateral \_underlyingRefPerTok is incorrect](https://github.com/code-423n4/2023-07-reserve-findings/issues/23)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/23), also found by [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/32)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/23), also found by [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/32)*
 
 ### Lines of Code
 
@@ -94,15 +92,12 @@ Or, the ref unit for the collateral should be the staked eth2.
 Context
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/23#issuecomment-1670254005):**
-
-> This feels like a duplicate of [#32](https://github.com/code-423n4/2023-07-reserve-findings/issues/32). The root cause is an incorrect reference unit. The reference unit should be staked eth2, as indicated here.
+ > This feels like a duplicate of [#32](https://github.com/code-423n4/2023-07-reserve-findings/issues/32). The root cause is an incorrect reference unit. The reference unit should be staked eth2, as indicated here. 
 
 **[pmckelvy1 (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/23#issuecomment-1687102372)**
 
 **[ronnyx2017 (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/23#issuecomment-1706448165):**
-
-> This issue and [32](https://github.com/code-423n4/2023-07-reserve-findings/issues/32) explain the misuse of tar unit and ref unit in staked eth related assets from different perspectives. The root cause is same, that 1 staked eth2 != 1 eth. This issue assumes that the ref token and target is all eth, which is referred to in [the docs](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/2023-07-reserve/protocol/contracts/plugins/assets/cbeth/README.md). So the error should be in the function `_underlyingRefPerTok`. But issue 32 assumes that the ref unit should be staked eth2 and the target unit is eth. So it needs to modify function `targetPerRef`. I also have mentioned this mitigation in the `Recommended Mitigation Steps` section of the current issue:
->
+ > This issue and [32](https://github.com/code-423n4/2023-07-reserve-findings/issues/32) explain the misuse of tar unit and ref unit in staked eth related assets from different perspectives. The root cause is same, that 1 staked eth2 != 1 eth. This issue assumes that the ref token and target is all eth, which is referred to in [the docs](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/2023-07-reserve/protocol/contracts/plugins/assets/cbeth/README.md). So the error should be in the function `_underlyingRefPerTok`. But issue 32 assumes that the ref unit should be staked eth2 and the target unit is eth. So it needs to modify function `targetPerRef`. I also have mentioned this mitigation in the `Recommended Mitigation Steps` section of the current issue:
 > ```
 > Or, the ref unit for the collateral should be the staked eth2.
 > ```
@@ -110,17 +105,15 @@ Context
 **[cccz (judge) increased severity to High](https://github.com/code-423n4/2023-07-reserve-findings/issues/23#issuecomment-1706659317)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Fixes units and price calculations in cbETH, rETH, ankrETH collateral plugins.<br>
 > PR: https://github.com/reserve-protocol/protocol/pull/899
 
-**Status**: Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/20), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/3) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/2).
+**Status**: Mitigation confirmed. Full details in reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/20), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/3) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/2).
 
----
+***
 
 ## [[H-02] CurveVolatileCollateral Collateral status can be manipulated by flashloan attack](https://github.com/code-423n4/2023-07-reserve-findings/issues/22)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/22)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/22)*
 
 Attacker can make the CurveVolatileCollateral enter the status of IFFY/DISABLED. It will cause the basket to rebalance and sell off all the CurveVolatileCollateral.
 
@@ -171,17 +164,15 @@ Context
 **[tbrent (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/22#issuecomment-1670210544)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Removes `CurveVolatileCollateral`.<br>
 > PR: https://github.com/reserve-protocol/protocol/pull/896
 
-**Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/21), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/27) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/4).
+**Status:** Mitigation confirmed. Full details in reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/21), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/27) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/4).
 
----
+***
 
 ## [[H-03] ConvexStakingWrapper.sol after shutdown，rewards can be stolen](https://github.com/code-423n4/2023-07-reserve-findings/issues/11)
-
-_Submitted by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/11)_
+*Submitted by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/11)*
 
 After shutdown, checkpoints are stopped, leading to possible theft of rewards.
 
@@ -215,7 +206,7 @@ After shutdown, checkpoints are stopped, leading to possible theft of rewards.
         for (uint256 i = 0; i < rewardCount; i++) {
             _calcRewardIntegral(i, _accounts, depositedBalance, supply, false);
         }
-    }
+    }    
 ```
 
 This would result in, after `shutdown`, being able to steal `rewards` by transferring `tokens` to new users.
@@ -231,12 +222,12 @@ When a `shutdown` occurs:
 Since Bob is the new user and `_beforeTokenTransfer()->_checkpoint()` is not actually executed.<br>
 Result:<br>
 balanceOf\[bob] = 100<br>
-reward.reward_integral_for\[bob] = 0
+reward.reward\_integral\_for\[bob] = 0
 
 2.  Bob executes `claimRewards()` to steal the reward.
 
-reward amount = balanceOf\[bob] \* (reward.reward_integral \- reward.reward_integral_for\[bob])<br>
-\= 100 \* (1000-0)
+reward amount = balanceOf\[bob] &ast; (reward.reward\_integral \- reward.reward\_integral\_for\[bob])<br>
+\= 100 &ast; (1000-0)
 
 3. Bob transfers the balance to other new users, looping steps 1-2 and stealing all rewards.
 
@@ -263,7 +254,7 @@ Still execute `\_checkpoint`
         for (uint256 i = 0; i < rewardCount; i++) {
             _calcRewardIntegral(i, _accounts, depositedBalance, supply, false);
         }
-    }
+    }    
 ```
 
 ### Assessed type
@@ -273,25 +264,23 @@ Context
 **[pmckelvy1 (Reserve) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/11#issuecomment-1699523437)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Skip reward claim in `_checkpoint` if shutdown. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/930
 
-**Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/22), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/29).
+**Status:** Mitigation confirmed. Full details in reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/22), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/29).
 
----
 
+***
+
+ 
 # Medium Risk Findings (15)
-
 ## [[M-01] Curve Read-only Reentrancy can increase the price of some CurveStableCollateral](https://github.com/code-423n4/2023-07-reserve-findings/issues/45)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/45), also found by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/14)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/45), also found by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/14)*
 
 If the curve pool of a CurveStableCollateral is a Plain Pool with a native gas token, just like eth/stETH pool: https://etherscan.io/address/0xdc24316b9ae028f1497c275eb9192a3ea0f67022#code<br>
 The price can be manipulated by Curve Read-only Reentrancy.
 
 A example is eth/stETH pool, in its `remove_liquidity` function:
-
 ```solidity
 # snippet from remove_liquidity
 CurveToken(lp_token).burnFrom(msg.sender, _amount)
@@ -306,7 +295,6 @@ for i in range(N_COINS):
 First, LP tokens are burned. Next, each token is transferred out to the msg.sender. Given that ETH will be the first coin transferred out, token balances and total LP token supply will be inconsistent during the execution of the fallback function.
 
 The `CurveStableCollateral` uses `total underlying token balance value / lp supply` to calculate the lp token price:
-
 ```
     (uint192 aumLow, uint192 aumHigh) = totalBalancesValue();
 
@@ -322,34 +310,30 @@ The `CurveStableCollateral` uses `total underlying token balance value / lp supp
 So the price will be higher than the actual value because the other assets(except eth) are still in the pool but the lp supply has been cut down during the `remove_liquidity` fallback.
 
 **[tbrent (Reserve) commented via duplicate issue `#14`](https://github.com/code-423n4/2023-07-reserve-findings/issues/14#issuecomment-1670265655):**
-
 > We have considered this very issue before and have decided as a solution to avoid raw ETH and ERC777's entirely, and _not_ try to detect reentrancy in the way described in the article. This is for a few reasons:
->
 > 1. It cannot be implemented uniformly. `withdraw_admin_fees` is not on all Curve pools, and in particular not on Tricrypto. https://etherscan.io/address/0xd51a44d3fae010294c616388b506acda1bfaae46
-> 2. Raw ETH presents other challenges. Even if we detect reentrancy in the way suggested, the assetRegistry making multiple asset `refresh()` calls means an attacker could gain execution under a _different_ asset's refresh() and use that to manipulate refPerTok().
->
+> 2. Raw ETH presents other challenges. Even if we detect reentrancy in the way suggested, the assetRegistry making multiple asset `refresh()` calls means an attacker could gain execution under a _different_ asset's refresh() and use that to manipulate refPerTok(). 
+> 
 > Also related: Our target unit system does not work well with volatile pools. Each pool would need its own target unit and therefore could not be backed up with any other collateral except identically/distributed pools. We plan to remove `CurveVolatileCollateral` entirely.
 
 **[tbrent (Reserve) commented via duplicate issue `#14`](https://github.com/code-423n4/2023-07-reserve-findings/issues/14#issuecomment-1670297671):**
-
 > There is documentation on the website indicating to avoid ERC777 tokens, but this should probably be updated to include forbidding LP tokens that contain raw ETH. Though, it is a bit more complicated than that since some LP tokens offer withdrawal functions that automate the unwrapping of WETH into ETH.
->
+> 
 > https://reserve.org/protocol/rtokens/#non-compatible-erc20-assets
 
 **[pmckelvy1 (Reserve) confirmed via duplicate issue `#14`](https://github.com/code-423n4/2023-07-reserve-findings/issues/14#issuecomment-1699524901)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Removes `CurveVolatileCollateral`. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/896
 
-**Status:** Mitigation confirmed. Full details in reports from [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/28), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/23) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/6).
+**Status:** Mitigation confirmed. Full details in reports from  [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/28), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/23) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/6).
 
----
+
+***
 
 ## [[M-02] `CTokenV3Collateral._underlyingRefPerTok` should use the decimals from underlying Comet](https://github.com/code-423n4/2023-07-reserve-findings/issues/39)
-
-_Submitted by [sces60107](https://github.com/code-423n4/2023-07-reserve-findings/issues/39)_
+*Submitted by [sces60107](https://github.com/code-423n4/2023-07-reserve-findings/issues/39)*
 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CTokenV3Collateral.sol#L56><br>
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L46><br>
@@ -363,10 +347,9 @@ _Submitted by [sces60107](https://github.com/code-423n4/2023-07-reserve-findings
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CTokenV3Collateral.sol#L56>
 
 ```solidity
-function _underlyingRefPerTok() internal view virtual override returns (uint192) {
-  return shiftl_toFix(ICusdcV3Wrapper(address(erc20)).exchangeRate(), -int8(erc20Decimals));
-}
-
+    function _underlyingRefPerTok() internal view virtual override returns (uint192) {
+        return shiftl_toFix(ICusdcV3Wrapper(address(erc20)).exchangeRate(), -int8(erc20Decimals));
+    }
 ```
 
 However, the correct decimals should be the decimals of underlying Comet since it is used in `CusdcV3Wrapper.exchangeRate`.
@@ -374,11 +357,10 @@ However, the correct decimals should be the decimals of underlying Comet since i
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L236>
 
 ```solidity
-function exchangeRate() public view returns (uint256) {
-  (uint64 baseSupplyIndex, ) = getUpdatedSupplyIndicies();
-  return presentValueSupply(baseSupplyIndex, safe104(10**underlyingComet.decimals()));
-}
-
+    function exchangeRate() public view returns (uint256) {
+        (uint64 baseSupplyIndex, ) = getUpdatedSupplyIndicies();
+        return presentValueSupply(baseSupplyIndex, safe104(10**underlyingComet.decimals()));
+    }
 ```
 
 ### Recommended Mitigation Steps
@@ -397,21 +379,19 @@ Decimal
 **[tbrent (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/39#issuecomment-1670212066)**
 
 **[pmckelvy1 (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/39#issuecomment-1673628054):**
-
-> https://github.com/reserve-protocol/protocol/pull/889
+ > https://github.com/reserve-protocol/protocol/pull/889
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Use decimals from underlying Comet. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/889
 
-**Status:** Mitigation confirmed. Full details in reports from [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/30), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/24) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/7).
+**Status:** Mitigation confirmed. Full details in reports from  [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/30), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/24) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/7).
 
----
+
+***
 
 ## [[M-03] `RTokenAsset` price estimation accounts for margin of error twice](https://github.com/code-423n4/2023-07-reserve-findings/issues/31)
-
-_Submitted by [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/31)_
+*Submitted by [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/31)*
 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/RTokenAsset.sol#L53-L72><br>
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/RTokenAsset.sol#L100-L115>
@@ -423,24 +403,24 @@ The issue is that both BU and baskets held account for price margin of error, wi
 
 This would increase the high estimation of the price and decrease the lower estimation. This would impact:
 
-- Setting a lower min price for trading (possibly selling the asset for less than its value)
-- Preventing the sale of the asset (`lotLow` falling below the min trade volume)
-- Misestimation of the basket range on the 'parent' RToken
+*   Setting a lower min price for trading (possibly selling the asset for less than its value)
+*   Preventing the sale of the asset (`lotLow` falling below the min trade volume)
+*   Misestimation of the basket range on the 'parent' RToken
 
 ### Proof of Concept
 
-- Both `tryPrice()` and `lotPrice()` use this method of multiplying basket unit price by basket range then dividing by total supply
-- BU price accounts for oracle error
-- As for the basket range - whenever one of the collaterals is missing (i.e. less than baskets needed) it estimates the value of anything above the min baskets held, and when doing that it estimates for oracle error as well.
+*   Both `tryPrice()` and `lotPrice()` use this method of multiplying basket unit price by basket range then dividing by total supply
+*   BU price accounts for oracle error
+*   As for the basket range - whenever one of the collaterals is missing (i.e. less than baskets needed) it estimates the value of anything above the min baskets held, and when doing that it estimates for oracle error as well.
 
 Consider the following scenario:
 
-- We have a basket composed of 1 ETH token and 1 USD token (cUSDCv2)
-- cUSDCv2 defaults and the backup token AAVE-USDC kicks in
-- Before trading rebalances things we have 0 AAVE-USDC
-- This means that we'd be estimating the low price of the ETH we're accounting for margin of error at least twice:
-  - Within the `basketRange()` we're dividing the ETH's `low` price by `buPriceHigh`
-  - Then we multiply again by `buPriceLow`
+*   We have a basket composed of 1 ETH token and 1 USD token (cUSDCv2)
+*   cUSDCv2 defaults and the backup token AAVE-USDC kicks in
+*   Before trading rebalances things we have 0 AAVE-USDC
+*   This means that we'd be estimating the low price of the ETH we're accounting for margin of error at least twice:
+    *   Within the `basketRange()` we're dividing the ETH's `low` price by `buPriceHigh`
+    *   Then we multiply again by `buPriceLow`
 
 (There's also some duplication within the `basketRange()` but that function isn't in scope, what is is scope is the additional margin of error when multiplying by `buPriceLow`).
 
@@ -453,91 +433,78 @@ I think the best way to mitigate this would be to use a dedicated function to es
 Other
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1671657043):**
-
-> Currently contemplating switching `BasketHandler.price()/lotPrice()` to return a point estimate, since it is only ever used by `RTokenAsset` and `RecollateralizationLib` to back out a `UoA` value to a `BU` value.
->
+ > Currently contemplating switching `BasketHandler.price()/lotPrice()` to return a point estimate, since it is only ever used by `RTokenAsset` and `RecollateralizationLib` to back out a `UoA` value to a `BU` value. 
+> 
 > (or equivalently, using the `basketHandler.price()` midpoint)
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1672310129):**
-
-> @0xA5DF - On further thought I'm not so sure this is a bug, or at least, I don't think one could do better. Consider the following:
->
-> - When an RToken is 100% collateralized (or expects to regain it), `basketRange().top == basketRange().bottom`. But there still needs to be uncertainty associated with the RToken price. It doesn't make sense for the RToken price estimate to be a single point estimate given there are price uncertainties associated with the backing tokens.
-> - The behavior you're describing only occurs when `basketRange()` has a non-zero delta between `top` and `bottom`. The delta exists due to potential clearing prices during the trading that will occur on the way to recollateralization. After all that occurs, there is then an _additional_ uncertainty that comes from pricing the tokens that will eventually back the RToken. So it seems right to me to take the oracleError into account twice, for balances that are expected to be traded.
->
+ > @0xA5DF - On further thought I'm not so sure this is a bug, or at least, I don't think one could do better. Consider the following:
+> - When an RToken is 100% collateralized (or expects to regain it), `basketRange().top == basketRange().bottom`. But there still needs to be uncertainty associated with the RToken price. It doesn't make sense for the RToken price estimate to be a single point estimate given there are price uncertainties associated with the backing tokens. 
+> - The behavior you're describing only occurs when `basketRange()` has a non-zero delta between `top` and `bottom`. The delta exists due to potential clearing prices during the trading that will occur on the way to recollateralization. After all that occurs, there is then an _additional_ uncertainty that comes from pricing the tokens that will eventually back the RToken. So it seems right to me to take the oracleError into account twice, for balances that are expected to be traded. 
+> 
 > As for the impact statements, there are a few things I'd point out:
->
 > ```
 > - Setting a lower min price for trading (possibly selling the asset for less than its value)
 > - Preventing the sale of the asset (lotLow falling below the min trade volume)
 > - Misestimation of the basket range on the 'parent' RToken
 > ```
->
 > 1. Any RToken sitting in the BackingManager [is dissolved](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/p1/BackingManager.sol#L133) as a first step before `rebalance()` trading. RToken will therefore never be bought or sold by the BackingManager, only ever by the RevenueTraders, and [**RevenueTraders do not pay attention to minTradeVolume**](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/p1/RevenueTrader.sol#L142).
-> 2. The trading mechanisms are intentionally resilient to under/over-pricing. Batch auctions have good price discovery as long as there is competition, and the dutch auctions will cover the entire distance between the "best price" and "worst price" for the pair, and then some. The impact for dutch auctions would be less precision in the overall clearing price due to larger drops in price per-block. The degree to which it can be said that the asset was sold for less than its true value is thus extremely small, and as implied by point 1 this can only happen for revenue auctions.
+> 2. The trading mechanisms are intentionally resilient to under/over-pricing. Batch auctions have good price discovery as long as there is competition, and the dutch auctions will cover the entire distance between the "best price" and "worst price" for the pair, and then some. The impact for dutch auctions would be less precision in the overall clearing price due to larger drops in price per-block. The degree to which it can be said that the asset was sold for less than its true value is thus extremely small, and as implied by point 1 this can only happen for revenue auctions. 
 
 **[0xA5DF (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1673783637):**
-
-> > So it seems right to me to take the oracleError into account twice, for balances that are expected to be traded.
->
+ > > So it seems right to me to take the oracleError into account twice, for balances that are expected to be traded.
+> 
 > I agree there's some sense to it, but:
->
-> - The required trading can be a very small percentage of the total basket value, e.g. we have 99 cUSDC and 1 aUSDC and the aUSDC is the one failing. In this case only 1% will be traded while we account for an oracle error for the whole basket.
-> - Notice that the same thing happens upwards, i.e. we account for the oracle error twice when calculating the `high` price. Do we expect to get more value by trading? we might argue that yes, but I think most cases we lose some value by trading (though I'm not sure what's the impact of the high price being to high)
->
+> * The required trading can be a very small percentage of the total basket value, e.g. we have 99 cUSDC and 1 aUSDC and the aUSDC is the one failing. In this case only 1% will be traded while we account for an oracle error for the whole basket.
+> * Notice that the same thing happens upwards, i.e. we account for the oracle error twice when calculating the `high` price. Do we expect to get more value by trading? we might argue that yes, but I think most cases we lose some value by trading (though I'm not sure what's the impact of the high price being to high)
+> 
 > > Any RToken sitting in the BackingManager [is dissolved](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/p1/BackingManager.sol#L133) as a first step before rebalance()
->
+> 
 > My understanding was that `RTokenAsset` is for cases when you have one RToken that holds another RToken as an asset, if this isn't the case then I agree this isn't relevant for rebalancing.
->
+> 
 > > The trading mechanisms are intentionally resilient to under/over-pricing.
->
+> 
 > I agree the mechanism will work well for most of the time, but during busy and high gas price periods this might fail and this is when you need the minimum price to kick in.<br>
 > Also notice that Dutch trades might have less participants when selling a high volume since it requires to buy the whole batch at once (if I'm not mistaken, I read somewhere in the docs that this is the reason we need `EasyAuction` as well), this is also a case where you need the min price protection mechanism.
 
 **[tbrent (Reserve) acknowledged and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1673929459):**
-
-> Good points. I was ignoring the fact that RTokens may hold other RTokens as assets. In the case of `CurveStableRTokenMetapoolCollateral`, it's also possible for an RToken to hold an LP token for a pool that contains a different RToken as one of its tokens. Currently for example [this pool](https://curve.fi/#/ethereum/pools/factory-v2-277) is a collateral token in the RToken hyUSD.
->
-> The point about the uncertainty being applied to the entire basket because of the use of `basketsHeld.bottom` is good as well. If the basket is DISABLED or directly after it is changed, for example, this value would be 0, so the uncertainty would be applied to _all_ token balances. This is something we were aware of in the context of a single RToken iteratively recollateralizing (because each step raises `basketsHeld.bottom`, decreasing uncertainty) but it's true that when it comes to one RToken pricing another RToken it seems like it could lead to poor behavior.
->
-> For upwards pricing it feels like less of a concern to me, because `range.top` is bounded at `rToken.basketsNeeded()`.
->
-> It's worth noting though that all this discussion has been in the absence of any RSR stake. In practice all RTokens are overcollateralized by RSR. If the overcollateralization is at least 2%, and the avg oracleError for the collateral tokens is 1%, then ~no double counting occurs because `range.top ~= range.bottom`. Only ETH+ today has such a low overcollateralization; the other 4 RTokens listed on register.app are overcollateralized 7-24%. Still, the protocol should function well when the Distributor is set up with 0% of revenue going to stakers.
->
+ > Good points. I was ignoring the fact that RTokens may hold other RTokens as assets. In the case of `CurveStableRTokenMetapoolCollateral`, it's also possible for an RToken to hold an LP token for a pool that contains a different RToken as one of its tokens. Currently for example [this pool](https://curve.fi/#/ethereum/pools/factory-v2-277) is a collateral token in the RToken hyUSD. 
+> 
+> The point about the uncertainty being applied to the entire basket because of the use of `basketsHeld.bottom` is good as well. If the basket is DISABLED or directly after it is changed, for example, this value would be 0, so the uncertainty would be applied to _all_ token balances. This is something we were aware of in the context of a single RToken iteratively recollateralizing (because each step raises `basketsHeld.bottom`, decreasing uncertainty) but it's true that when it comes to one RToken pricing another RToken it seems like it could lead to poor behavior. 
+> 
+> For upwards pricing it feels like less of a concern to me, because `range.top` is bounded at `rToken.basketsNeeded()`. 
+> 
+> It's worth noting though that all this discussion has been in the absence of any RSR stake. In practice all RTokens are overcollateralized by RSR. If the overcollateralization is at least 2%, and the avg oracleError for the collateral tokens is 1%, then ~no double counting occurs because `range.top ~= range.bottom`. Only ETH+ today has such a low overcollateralization; the other 4 RTokens listed on register.app are overcollateralized 7-24%. Still, the protocol should function well when the Distributor is set up with 0% of revenue going to stakers. 
+> 
 > Thoughts on ways this issue could be mitigated? I thought I had an idea but after I looked into it more I don't think it would work.
 
 **[0xA5DF commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1674983772):**
-
-> > Thoughts on ways this issue could be mitigated?
->
+ > > Thoughts on ways this issue could be mitigated?
+> 
 > Maybe the most simple solution would be to calculate the total value of the assets that the protocol holds (capped to BU price), and then multiply by baskets needed and divide by `totalSupply`.
->
+> 
 > I was thinking of modifying `RecollateralizationLibP1.basketRange()` to calculate the price rather than baskets the protocol holds, but I think it'd just be a more complicated way to calculate the above.
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1675110830):**
-
-> > Maybe the most simple solution would be to calculate the total value of the assets that the protocol holds (capped to BU price), and then multiply by baskets needed and divide by totalSupply.
->
-> The issue with an approach like this is that it's agnostic of where we are in the collateralization process. Balances that are disjoint with the current basket are treated the same as balances that are overlapping. This really comes down to the question of when and where to apply `maxTradeSlippage` and subtract out `minTradeVolume`, which is what the current `basketRange()` implementation aims to do.
+ > > Maybe the most simple solution would be to calculate the total value of the assets that the protocol holds (capped to BU price), and then multiply by baskets needed and divide by totalSupply.
+> 
+> The issue with an approach like this is that it's agnostic of where we are in the collateralization process. Balances that are  disjoint with the current basket are treated the same as balances that are overlapping. This really comes down to the question of when and where to apply `maxTradeSlippage` and subtract out `minTradeVolume`, which is what the current `basketRange()` implementation aims to do.
 
 **[tbrent (Reserve) disagreed with severity and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1675117094):**
-
-> We've discussed internally and where we're coming down is that we think this issue should be acknowledged but that it is a Medium and not a High. We want to acknowledge the issue because while we were aware of the double-counting of oracleError in the context of a single RToken pricing itself, we hadn't considered it in the context of a parent-child relationship, and in that case it is importantly different. However, it seems more like a Medium because the trading mechanisms are resilient to mild mispricing. The expected downside outcome would be a trade occuring via `DutchTrade` and the block-by-block price dropping faster than necessary, possibly resulting in more slippage, but this would likely be very small and on the order of ~0.1%, and only for the impacted balance held in the child RToken.
+ > We've discussed internally and where we're coming down is that we think this issue should be acknowledged but that it is a Medium and not a High. We want to acknowledge the issue because while we were aware of the double-counting of oracleError in the context of a single RToken pricing itself, we hadn't considered it in the context of a parent-child relationship, and in that case it is importantly different. However, it seems more like a Medium because the trading mechanisms are resilient to mild mispricing. The expected downside outcome would be a trade occuring via `DutchTrade` and the block-by-block price dropping faster than necessary, possibly resulting in more slippage, but this would likely be very small and on the order of ~0.1%, and only for the impacted balance held in the child RToken. 
 
 **[cccz (judge) decreased severity to Medium](https://github.com/code-423n4/2023-07-reserve-findings/issues/31#issuecomment-1676659739)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Acknowledged and documented. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/916
 
 **Status:** Mitigation confirmed. Full details in reports from [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/8), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/31) and [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/25).
 
----
+***
 
 ## [[M-04] Possible rounding during the reward calculation](https://github.com/code-423n4/2023-07-reserve-findings/issues/30)
-
-_Submitted by [auditor0517](https://github.com/code-423n4/2023-07-reserve-findings/issues/30)_
+*Submitted by [auditor0517](https://github.com/code-423n4/2023-07-reserve-findings/issues/30)*
 
 Some rewards might be locked inside the contract due to the rounding loss.
 
@@ -546,26 +513,25 @@ Some rewards might be locked inside the contract due to the rounding loss.
 `_claimAndSyncRewards()` claimed the rewards from the staking contract and tracks `rewardsPerShare` with the current supply.
 
 ```solidity
-function _claimAndSyncRewards() internal virtual {
-  uint256 _totalSupply = totalSupply();
-  if (_totalSupply == 0) {
-    return;
-  }
-  _claimAssetRewards();
-  uint256 balanceAfterClaimingRewards = rewardToken.balanceOf(address(this));
+    function _claimAndSyncRewards() internal virtual {
+        uint256 _totalSupply = totalSupply();
+        if (_totalSupply == 0) {
+            return;
+        }
+        _claimAssetRewards();
+        uint256 balanceAfterClaimingRewards = rewardToken.balanceOf(address(this));
 
-  uint256 _rewardsPerShare = rewardsPerShare;
-  uint256 _previousBalance = lastRewardBalance;
+        uint256 _rewardsPerShare = rewardsPerShare;
+        uint256 _previousBalance = lastRewardBalance;
 
-  if (balanceAfterClaimingRewards > _previousBalance) {
-    uint256 delta = balanceAfterClaimingRewards - _previousBalance;
-    // {qRewards/share} += {qRewards} * {qShare/share} / {qShare}
-    _rewardsPerShare += (delta * one) / _totalSupply; //@audit possible rounding loss
-  }
-  lastRewardBalance = balanceAfterClaimingRewards;
-  rewardsPerShare = _rewardsPerShare;
-}
-
+        if (balanceAfterClaimingRewards > _previousBalance) {
+            uint256 delta = balanceAfterClaimingRewards - _previousBalance;
+            // {qRewards/share} += {qRewards} * {qShare/share} / {qShare}
+            _rewardsPerShare += (delta * one) / _totalSupply; //@audit possible rounding loss
+        }
+        lastRewardBalance = balanceAfterClaimingRewards;
+        rewardsPerShare = _rewardsPerShare;
+    }
 ```
 
 It uses [one](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L38) as a multiplier and from [this setting](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20Wrapper.sol#L32-L39) we know it has the same decimals as `underlying`(thus `totalSupply`).
@@ -573,9 +539,9 @@ It uses [one](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1f
 My concern is `_claimAndSyncRewards()` is called for each deposit/transfer/withdraw in [\_beforeTokenTransfer()](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L124) and it will make the rounding problem more serious.
 
 1.  Let's consider [underlyingDecimals = 18](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20Wrapper.sol#L34). `totalSupply = 10**6 with 18 decimals`, `rewardToken` has 6 decimals. And total rewards for 1 year are `1M rewardToken` for `1M totalSupply`.
-2.  With the above settings, `_claimAndSyncRewards()` might be called every 1 min due to the frequent user actions.
-3.  Then expected rewards for 1 min are `1000000 / 365 / 24 / 60 = 1.9 rewardToken = 1900000 wei`.
-4.  During the [division](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L86), it will be `1900000 * 10**18 / (1000000 * 10**18) = 1`.
+2. With the above settings, `_claimAndSyncRewards()` might be called every 1 min due to the frequent user actions.
+3. Then expected rewards for 1 min are `1000000 / 365 / 24 / 60 = 1.9 rewardToken = 1900000 wei`.
+4. During the [division](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L86), it will be `1900000 * 10**18 / (1000000 * 10**18) = 1`.
 
 So users would lose almost 50% of rewards due to the rounding loss and these rewards will be locked inside the contract.
 
@@ -604,21 +570,18 @@ I think there would be 2 mitigations.
 Math
 
 **[tbrent (Reserve) confirmed and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/30#issuecomment-1670219312):**
-
-> Mitigation option `#2` seems quite good.
+ > Mitigation option `#2` seems quite good.
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Roll over remainder to next call. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/896
 
 **Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/36), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/9).
 
----
+***
 
 ## [[M-05] Permanent funds lock in `StargateRewardableWrapper`](https://github.com/code-423n4/2023-07-reserve-findings/issues/27)
-
-_Submitted by [auditor0517](https://github.com/code-423n4/2023-07-reserve-findings/issues/27)_
+*Submitted by [auditor0517](https://github.com/code-423n4/2023-07-reserve-findings/issues/27)*
 
 The staked funds might be locked because the deposit/withdraw/transfer logic reverts.
 
@@ -627,10 +590,9 @@ The staked funds might be locked because the deposit/withdraw/transfer logic rev
 In `StargateRewardableWrapper`, `_claimAssetRewards()` claims the accumulated rewards from the staking contract and it's called during every deposit/withdraw/transfer in [\_beforeTokenTransfer()](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L124) and [\_claimAndSyncRewards()](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L77).
 
 ```solidity
-function _claimAssetRewards() internal override {
-  stakingContract.deposit(poolId, 0);
-}
-
+    function _claimAssetRewards() internal override {
+        stakingContract.deposit(poolId, 0);
+    }
 ```
 
 And in the stargate staking contract, [deposit()](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L153) calls [updatePool()](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L136) inside the function.
@@ -668,7 +630,7 @@ So user funds might be locked like the below.
 1.  The stargate staking contract had one pool and `totalAllocPoint = 10`.
 2.  In `StargateRewardableWrapper`, some users staked their funds using [deposit()](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20Wrapper.sol#L42).
 3.  After that, that pool was removed by the stargate admin due to an unexpected reason. So the admin called [set(0, 0)](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L100) to reset the pool. Then `totalAllocPoint = 0` now. In the stargate contract, it's not so critical because this contract has [emergencyWithdraw()](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L184) to rescue funds without caring about rewards. Normal users can withdraw their funds using this function.
-4.  But in `StargateRewardableWrapper`, there is no logic to be used under the emergency and deposit/withdraw won't work because `_claimAssetRewards()` reverts in [updatePool()](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L147) due to 0 division.
+4. But in `StargateRewardableWrapper`, there is no logic to be used under the emergency and deposit/withdraw won't work because `_claimAssetRewards()` reverts in [updatePool()](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L147) due to 0 division.
 
 ### Recommended Mitigation Steps
 
@@ -681,23 +643,20 @@ During the emergency, `_claimAssetRewards()` should return 0 without interacting
 Error
 
 **[cccz (judge) decreased severity to Medium and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/27#issuecomment-1667163427):**
-
-> External requirement with specific owner behavior.
+ > External requirement with specific owner behavior.
 
 **[tbrent (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/27#issuecomment-1670222139)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Add call to `emergencyWithdraw`. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/896
 
 **Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/40), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/32).
 
----
+***
 
 ## [[M-06] CurveStableMetapoolCollateral.tryPrice returns a huge but valid high price when the price oracle of pairedToken is timeout](https://github.com/code-423n4/2023-07-reserve-findings/issues/25)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/25)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/25)*
 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableMetapoolCollateral.sol#L83-L86><br>
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableCollateral.sol#L74-L98>
@@ -727,7 +686,7 @@ function tryPairedPrice() public view virtual returns (uint192 lowPaired, uint19
 }
 ```
 
-So if the chainlinkFeed is offline(oracle timeout), the tryPairedPrice will throw an error which is caught by the empty catch block, and the price of pairedToken will be (0, FIX_MAX).
+So if the chainlinkFeed is offline(oracle timeout), the tryPairedPrice will throw an error which is caught by the empty catch block, and the price of pairedToken will be (0, FIX\_MAX).
 
 And then the function `_metapoolBalancesValue` will use these prices to get the total UoA of the metapool. The following codes are how it uses the price of pairedToken:
 
@@ -743,7 +702,7 @@ if (aumHigh + uint256(toAdd) >= FIX_MAX) {
 }
 ```
 
-The `aumLow` has already included the UoA of LpToken, so it is non-zero. And the highPaired price now is FIX_MAX, which will mul the paired token balance by `Fixed.safeMul`. We can find the Fixed lib has handled overflow safely:
+The `aumLow` has already included the UoA of LpToken, so it is non-zero. And the highPaired price now is FIX\_MAX, which will mul the paired token balance by `Fixed.safeMul`. We can find the Fixed lib has handled overflow safely:
 
 ```solidity
 function safeMul(
@@ -755,12 +714,12 @@ function safeMul(
     if (a == FIX_MAX || b == FIX_MAX) return FIX_MAX;
 ```
 
-So the `aumHigh` from the `_metapoolBalancesValue` function will be FIX_MAX. The final prices are calculated by:
+So the `aumHigh` from the `_metapoolBalancesValue` function will be FIX\_MAX. The final prices are calculated by:
 
     low = aumLow.div(supply, FLOOR);
     high = aumHigh.div(supply, CEIL);
 
-`supply` is the `metapoolToken.totalSupply()`. So if the supply is > 1 token, the `Fixed.div` won't revert. And the high price will be a huge but valid value < FIX_MAX.
+`supply` is the `metapoolToken.totalSupply()`. So if the supply is > 1 token, the `Fixed.div` won't revert. And the high price will be a huge but valid value < FIX\_MAX.
 
 ### Recommended Mitigation Steps
 
@@ -773,17 +732,15 @@ Context
 **[tbrent (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/25#issuecomment-1670234545)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Enforce (`0, FIX_MAX`) as "unpriced" during oracle timeout. <br>
 > PR: https://github.com/reserve-protocol/protocol/pull/917
 
 **Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/37), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/33) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/10).
 
----
+***
 
 ## [[M-07] The Asset.lotPrice doubles the oracle timeout in the worst case](https://github.com/code-423n4/2023-07-reserve-findings/issues/24)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/24)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/24)*
 
 When the `tryPrice()` function revert, for example oracle timeout, the `Asset.lotPrice` will use a decayed historical value:
 
@@ -797,7 +754,7 @@ if (delta <= oracleTimeout) {
 } else {
 ```
 
-And the delta time is from the last price saved time. If the delta time is greater than oracle timeout, historical price starts decaying.
+And the delta time is from the last price saved time. If the delta time is greater than oracle timeout,  historical price starts decaying.
 
 But the last price might be saved at the last second of the last oracle timeout period. So the `Asset.lotPrice` will double the oracle timeout in the worst case.
 
@@ -823,7 +780,7 @@ But in the `OracleLib`, the oracle time is checked for the delta time of `block.
     uint48 secondsSince = uint48(block.timestamp - updateTime);
     if (secondsSince > timeout) revert StalePrice();
 
-So if the last oracle feed updateTime is `block.timestamp - priceTimeout`, the timeout check will be passed and lastSave will be updated to block.timestamp. And the lotPrice will start to decay from `lastSave + priceTimeout`. However when it starts, it's been 2 \* priceTimeout since the last oracle price update.
+So if the last oracle feed updateTime is `block.timestamp - priceTimeout`, the timeout check will be passed and lastSave will be updated to block.timestamp. And the lotPrice will start to decay from `lastSave + priceTimeout`. However when it starts, it's been 2 &ast; priceTimeout since the last oracle price update.
 
 ### Recommended Mitigation Steps
 
@@ -834,23 +791,23 @@ Starts lotPrice decay immediately or updated the `lastSave` to `updateTime` inst
 Context
 
 **[tbrent (Reserve) disputed and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/24#issuecomment-1670250237):**
-
-> This issue was known and was discussed internally. Unfortunately this occurred in the private copy of the repo that the devs use to coordinate while C4 audits are ongoing. I've attached a screenshot of the discussion, though it is up to C4 how to treat this ultimately. We could probably provide repo access to a member of the C4 team if asked.
->
+ > This issue was known and was discussed internally. Unfortunately this occurred in the private copy of the repo that the devs use to coordinate while C4 audits are ongoing. I've attached a screenshot of the discussion, though it is up to C4 how to treat this ultimately. We could probably provide repo access to a member of the C4 team if asked. 
+> 
 > ![Screenshot 2023-08-08 at 4 11 33 PM](https://github.com/code-423n4/2023-07-reserve-findings/assets/13439795/bab2c98b-1144-4463-87ea-a6453a4924e0)
->
+> 
 > We decided not to pursue this direction as it introduced a large number of changes, and it seems acceptable to have the worst-case behavior of using 100% of the last saved price for up to one oracleTimeout too long.
 
 **[cccz (judge) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/24#issuecomment-1680742090):**
+ > Agree that sponsors not address it.<br>
+> And this issue will be considered as medium risk under the C4 criteria.<br>
+> `> 2 — Med: Assets not at direct risk, but the function of the protocol or its availability could be impacted, or leak value with a hypothetical attack path with stated assumptions, but external requirements.`
 
-> Agree that sponsors not address it.<br>
-> And this issue will be considered as medium risk under the C4 criteria.<br> > `> 2 — Med: Assets not at direct risk, but the function of the protocol or its availability could be impacted, or leak value with a hypothetical attack path with stated assumptions, but external requirements.`
 
----
+
+***
 
 ## [[M-08] User can't redeem from RToken based on CurveStableRTokenMetapoolCollateral when any underlying collateral of paired RToken's price oracle is offline(timeout)](https://github.com/code-423n4/2023-07-reserve-findings/issues/21)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/21)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/21)*
 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableRTokenMetapoolCollateral.sol#L46-L54><br>
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableCollateral.sol#L119-L121><br>
@@ -875,13 +832,13 @@ First I submitted another issue named "RTokenAsset price oracle can return a hug
 
 The conclusion from the pre issue:
 
-> _If there is any underlying collateral's price oracle reverts, for example oracle timeout, the `RTokenAsset.price` will return a valid but untrue (low, high) price range, which can be described as `low = true_price _ A1`and`high = FIX_MAX _ A2`, A1 is `bh.quantity(oracle_revert_coll) / all quantity for a BU`and A2 is the`BasketRange.top / RToken totalSupply`._
+> *If there is any underlying collateral's price oracle reverts, for example oracle timeout, the `RTokenAsset.price` will return a valid but untrue (low, high) price range, which can be described as `low = true_price * A1` and `high = FIX_MAX * A2`, A1 is `bh.quantity(oracle_revert_coll) / all quantity for a BU` and A2 is the `BasketRange.top / RToken totalSupply`.*
 
 Back to the `CurveStableRTokenMetapoolCollateral`. There are two cases that will revert in the super class `CurveStableCollateral.refresh()`.
 
-The `CurveStableRTokenMetapoolCollateral.tryPairedPrice` function gets low/high price from `paired RTokenAsset.price()`. So when any underlying collateral's price oracle of paired RTokenAsset reverts, the max high price will be FIX_MAX and the low price is non-zero.
+The `CurveStableRTokenMetapoolCollateral.tryPairedPrice` function gets low/high price from `paired RTokenAsset.price()`. So when any underlying collateral's price oracle of paired RTokenAsset reverts, the max high price will be FIX\_MAX and the low price is non-zero.
 
-1.  If the high price is FIX_MAX, the assert for low price will revert:
+1.  If the high price is FIX\_MAX, the assert for low price will revert:
 
 ```
     if (high < FIX_MAX) {
@@ -896,7 +853,7 @@ The `CurveStableRTokenMetapoolCollateral.tryPairedPrice` function gets low/high 
     }
 ```
 
-2.  And if high price is There is a little smaller than FIX_MAX, the `_anyDepeggedOutsidePool` check in the refresh function will revert.
+2.  And if high price is There is a little smaller than FIX\_MAX, the `_anyDepeggedOutsidePool` check in the refresh function will revert.
 
 ```
     if (low == 0 || _anyDepeggedInPool() || _anyDepeggedOutsidePool()) {
@@ -918,7 +875,7 @@ And the `CurveStableMetapoolCollateral` overrides it:
         }
 ```
 
-So the `uint192 mid = (low + high) / 2;` will revert because of uint192 overflow. The `CurveStableRTokenMetapoolCollateral.refresh()` will revert without any catch.
+So the `uint192 mid = (low + high) / 2;`  will revert because of uint192 overflow. The `CurveStableRTokenMetapoolCollateral.refresh()` will revert without any catch.
 
 Because RToken.redeemTo and redeemCustom need to call `assetRegistry.refresh();` at the beginning, it will revert directly.
 
@@ -939,23 +896,20 @@ The assert `assert(low <= high)` in the RTokenAsset.tryPrice has already protect
 DoS
 
 **[cccz (judge) decreased severity to Medium and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/21#issuecomment-1667169269):**
-
-> External requirement with oracle errors.
+ > External requirement with oracle errors.
 
 **[pmckelvy1 (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/21#issuecomment-1687104593)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Unpriced on oracle timeout.<br>
 > PR: https://github.com/reserve-protocol/protocol/pull/917
 
 **Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/38), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/34) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/11) .
 
----
+***
 
 ## [[M-09] RTokenAsset price oracle can return a huge but valid high price when any underlying collateral's price oracle timeout](https://github.com/code-423n4/2023-07-reserve-findings/issues/20)
-
-_Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/20)_
+*Submitted by [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/20)*
 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/RTokenAsset.sol#L163-L175><br>
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/RTokenAsset.sol#L53-L69><br>
@@ -965,19 +919,18 @@ The RTokenAsset is an implementation of interface `IRTokenOracle` to work as a o
 
 ```solidity
 function _updateCachedPrice() internal {
-  (uint192 low, uint192 high) = price();
+    (uint192 low, uint192 high) = price();
 
-  require(low != 0 && high != FIX_MAX, 'invalid price');
+    require(low != 0 && high != FIX_MAX, "invalid price");
 
-  cachedOracleData = CachedOracleData(
-    (low + high) / 2,
-    block.timestamp,
-    basketHandler.nonce(),
-    backingManager.tradesOpen(),
-    backingManager.tradesNonce()
-  );
+    cachedOracleData = CachedOracleData(
+        (low + high) / 2,
+        block.timestamp,
+        basketHandler.nonce(),
+        backingManager.tradesOpen(),
+        backingManager.tradesNonce()
+    );
 }
-
 ```
 
 The `_updateCachedPrice` gets the low and high prices from `price()`, and updates the oracle price to `(low + high) / 2`. And it checks `low != 0 && high != FIX_MAX`.
@@ -986,11 +939,11 @@ The `RTokenAsset.price` just uses the return of `tryPrice` as the low price and 
 
 ### Impact
 
-The RToken oracle price will be about `FIX_MAX / 2` when any underlying collateral's price oracle is timeout. It is significantly more than the actual price. It will lead to a distortion in the price of collateral associated with the RToken, for example `CurveStableRTokenMetapoolCollateral`:
+The RToken oracle price will be about `FIX_MAX / 2` when any underlying collateral's price oracle is timeout. It is significantly more than the actual price. It  will lead to a distortion in the price of collateral associated with the RToken, for example `CurveStableRTokenMetapoolCollateral`:
 
 ```solidity
     pairedAssetRegistry = IRToken(address(pairedToken)).main().assetRegistry();
-
+    
     function tryPairedPrice()
     ...
     {
@@ -1020,7 +973,7 @@ for (uint256 i = 0; i < len; ++i) {
 }
 ```
 
-And the `IAsset.price()` should not revert. If the price oracle of the asset reverts, it just returns `(0,FIX_MAX)`. In this case, the branch will enter `high256 += qty.safeMul(highP, RoundingMode.CEIL);` first. And it won't revert for overflow because the Fixed.safeMul will return FIX_MAX directly if any param is FIX_MAX:
+And the `IAsset.price()` should not revert. If the price oracle of the asset reverts, it just returns `(0,FIX_MAX)`. In this case, the branch will enter `high256 += qty.safeMul(highP, RoundingMode.CEIL);` first. And it won't revert for overflow because the Fixed.safeMul will return FIX\_MAX directly if any param is FIX\_MAX:
 
 ```solidity
 function safeMul(
@@ -1066,23 +1019,20 @@ function tryPrice() external view virtual returns (uint192 low, uint192 high) {
 Context
 
 **[cccz (judge) decreased severity to Medium and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/20#issuecomment-1667168907):**
-
-> External requirement with oracle errors.
+ > External requirement with oracle errors.
 
 **[pmckelvy1 (Reserve) confirmed](https://github.com/code-423n4/2023-07-reserve-findings/issues/20#issuecomment-1699524306)**
 
 **[Reserve Mitigated](https://github.com/code-423n4/2023-09-reserve-mitigation#individual-prs):**
-
 > Enforce (`0, FIX_MAX`) as "unpriced" during oracle timeout.<br>
 > PR: https://github.com/reserve-protocol/protocol/pull/917
 
 **Status:** Mitigation confirmed. Full details in reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/39), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/35) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/12).
 
----
+***
 
 ## [[M-10] `Asset.lotPrice` only uses `oracleTimeout` to determine if the price is stale.](https://github.com/code-423n4/2023-07-reserve-findings/issues/17)
-
-_Submitted by [sces60107](https://github.com/code-423n4/2023-07-reserve-findings/issues/17)_
+*Submitted by [sces60107](https://github.com/code-423n4/2023-07-reserve-findings/issues/17)*
 
 `OracleTimeout` is the number of seconds until an oracle value becomes invalid. It is set in the constructor of `Asset`. And `Asset.lotPrice` uses `OracleTimeout` to determine if the saved price is stale. However, `OracleTimeout` may not be the correct source to determine if the price is stale. `Asset.lotPrice` may return the incorrect price.
 
@@ -1109,37 +1059,36 @@ _Submitted by [sces60107](https://github.com/code-423n4/2023-07-reserve-findings
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L140>
 
 ```solidity
-function lotPrice() external view virtual returns (uint192 lotLow, uint192 lotHigh) {
-  try this.tryPrice() returns (uint192 low, uint192 high, uint192) {
-    // if the price feed is still functioning, use that
-    lotLow = low;
-    lotHigh = high;
-  } catch (bytes memory errData) {
-    // see: docs/solidity-style.md#Catching-Empty-Data
-    if (errData.length == 0) revert(); // solhint-disable-line reason-string
+    function lotPrice() external view virtual returns (uint192 lotLow, uint192 lotHigh) {
+        try this.tryPrice() returns (uint192 low, uint192 high, uint192) {
+            // if the price feed is still functioning, use that
+            lotLow = low;
+            lotHigh = high;
+        } catch (bytes memory errData) {
+            // see: docs/solidity-style.md#Catching-Empty-Data
+            if (errData.length == 0) revert(); // solhint-disable-line reason-string
 
-    // if the price feed is broken, use a decayed historical value
+            // if the price feed is broken, use a decayed historical value
 
-    uint48 delta = uint48(block.timestamp) - lastSave; // {s}
-    if (delta <= oracleTimeout) {
-      lotLow = savedLowPrice;
-      lotHigh = savedHighPrice;
-    } else if (delta >= oracleTimeout + priceTimeout) {
-      return (0, 0); // no price after full timeout
-    } else {
-      // oracleTimeout <= delta <= oracleTimeout + priceTimeout
+            uint48 delta = uint48(block.timestamp) - lastSave; // {s}
+            if (delta <= oracleTimeout) {
+                lotLow = savedLowPrice;
+                lotHigh = savedHighPrice;
+            } else if (delta >= oracleTimeout + priceTimeout) {
+                return (0, 0); // no price after full timeout
+            } else {
+                // oracleTimeout <= delta <= oracleTimeout + priceTimeout
 
-      // {1} = {s} / {s}
-      uint192 lotMultiplier = divuu(oracleTimeout + priceTimeout - delta, priceTimeout);
+                // {1} = {s} / {s}
+                uint192 lotMultiplier = divuu(oracleTimeout + priceTimeout - delta, priceTimeout);
 
-      // {UoA/tok} = {UoA/tok} * {1}
-      lotLow = savedLowPrice.mul(lotMultiplier);
-      lotHigh = savedHighPrice.mul(lotMultiplier);
+                // {UoA/tok} = {UoA/tok} * {1}
+                lotLow = savedLowPrice.mul(lotMultiplier);
+                lotHigh = savedHighPrice.mul(lotMultiplier);
+            }
+        }
+        assert(lotLow <= lotHigh);
     }
-  }
-  assert(lotLow <= lotHigh);
-}
-
 ```
 
 However, `oracleTimeout` may not be the accurate source to determine if the saved price is stale. The following examples shows that using only `oracleTimeout` is vulnerable.
@@ -1239,16 +1188,15 @@ We can also find out that `oracleTimeout` is unused. But `lotPrice()` still uses
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableCollateral.sol#L28>
 
 ```solidity
-/// @dev config Unused members: chainlinkFeed, oracleError, oracleTimeout
-/// @dev config.erc20 should be a RewardableERC20
-constructor(
-  CollateralConfig memory config,
-  uint192 revenueHiding,
-  PTConfiguration memory ptConfig
-) AppreciatingFiatCollateral(config, revenueHiding) PoolTokens(ptConfig) {
-  require(config.defaultThreshold > 0, 'defaultThreshold zero');
-}
-
+    /// @dev config Unused members: chainlinkFeed, oracleError, oracleTimeout
+    /// @dev config.erc20 should be a RewardableERC20
+    constructor(
+        CollateralConfig memory config,
+        uint192 revenueHiding,
+        PTConfiguration memory ptConfig
+    ) AppreciatingFiatCollateral(config, revenueHiding) PoolTokens(ptConfig) {
+        require(config.defaultThreshold > 0, "defaultThreshold zero");
+    }
 ```
 
 ### Recommended Mitigation Steps
@@ -1277,21 +1225,18 @@ Then, collaterals can override `actualOracleTimeout` to reflect the correct orac
 Error
 
 **[cccz (judge) decreased severity to Medium and commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/17#issuecomment-1667169837):**
-
-> External requirement with oracle errors.
+ > External requirement with oracle errors.
 
 **[tbrent (Reserve) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/17#issuecomment-1670255601)**
 
 **[pmckelvy1 (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/17#issuecomment-1799793083):**
-
 > As documented in `Asset.sol` [here](https://github.com/reserve-protocol/protocol/blob/master/contracts/plugins/assets/Asset.sol#L41):<br>
-> `oracleTimeout_` is also used as the timeout value in `lotPrice()`; should be highest of all assets 'oracleTimeout` in a collateral if there are multiple oracles.
+`oracleTimeout_` is also used as the timeout value in `lotPrice()`; should be highest of all assets 'oracleTimeout` in a collateral if there are multiple oracles.
 
----
+***
 
 ## [[M-11] StaticATokenLM transfer missing \_updateRewards](https://github.com/code-423n4/2023-07-reserve-findings/issues/12)
-
-_Submitted by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/12)_
+*Submitted by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/12)*
 
 Transfer missing `_updateRewards()`, resulting in the loss of `from`'s reward.
 
@@ -1334,28 +1279,27 @@ Example: `mint()/burn()` both call `_updateRewards()` to update `_accRewardsPerT
 @>      _burn(owner, amountToBurn);
 
 ...
-    }
+    }        
 ```
 
 When `transfer()/transerFrom()`, the balance is also modified, but without calling `_updateRewards()` first. The result is that if the user transfers the balance, the difference in rewards accrued by `from` is transferred to `to` along with it. This doesn't make sense for `from`.
 
 ```solidity
-function _beforeTokenTransfer(
-  address from,
-  address to,
-  uint256
-) internal override {
-  if (address(INCENTIVES_CONTROLLER) == address(0)) {
-    return;
-  }
-  if (from != address(0)) {
-    _updateUser(from);
-  }
-  if (to != address(0)) {
-    _updateUser(to);
-  }
-}
-
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal override {
+        if (address(INCENTIVES_CONTROLLER) == address(0)) {
+            return;
+        }
+        if (from != address(0)) {
+            _updateUser(from);
+        }
+        if (to != address(0)) {
+            _updateUser(to);
+        }
+    }
 ```
 
 ### Recommended Mitigation Steps
@@ -1363,23 +1307,22 @@ function _beforeTokenTransfer(
 `_beforeTokenTransfer` first trigger `_updateRewards()`.
 
 ```solidity
-function _beforeTokenTransfer(
-  address from,
-  address to,
-  uint256
-) internal override {
-  if (address(INCENTIVES_CONTROLLER) == address(0)) {
-    return;
-  }
-  +_updateRewards();
-  if (from != address(0)) {
-    _updateUser(from);
-  }
-  if (to != address(0)) {
-    _updateUser(to);
-  }
-}
-
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal override {
+        if (address(INCENTIVES_CONTROLLER) == address(0)) {
+            return;
+        }
++       _updateRewards();        
+        if (from != address(0)) {
+            _updateUser(from);
+        }
+        if (to != address(0)) {
+            _updateUser(to);
+        }
+    }
 ```
 
 ### Assessed type
@@ -1387,25 +1330,23 @@ function _beforeTokenTransfer(
 Context
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1670267488):**
-
-> We will be reaching out to the Aave team to understand more about this. It seems there are multiple places in StaticATokenLM where reward steps are missing, and there may be reasons why.
+ > We will be reaching out to the Aave team to understand more about this. It seems there are multiple places in StaticATokenLM where reward steps are missing, and there may be reasons why. 
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1695841823):**
-
-> We will mark this issue as Sponsor Acknowledged. It is true the situation described by the warden and that's the behavior we observe. However we will not be implementing any change in the code (besides adding some comments) for the following reasons:
->
-> - We do not expect rewards in Aave V2 to come back.
-> - We checked with Aave and we believe the original reason for building it this way still holds, and that is for gas purposes. Even if for some reason rewards on AAve V2 come back the cost of updating the user rewards on every transfer outweighs the rewards that may be left "uncollected" after a `transfer` operation. It is important to remark that any `deposit` or `withdraw` done to the contract plus any call to `collectRewards..`, and any claim of rewards from the Reserve protocol, would setup the correct balances. So while it is true that transfers may in some cases not transfer rewards we expect this to only be slightly off.
->
+ > We will mark this issue as Sponsor Acknowledged. It is true the situation described by the warden and that's the behavior we observe. However we will not be implementing any change in the code (besides adding some comments) for the following reasons:
+> * We do not expect rewards in Aave V2 to come back.
+> * We checked with Aave and we believe the original reason for building it this way still holds, and that is for gas purposes. Even if for some reason rewards on AAve V2 come back the cost of updating the user rewards on every transfer outweighs the rewards that may be left "uncollected" after a `transfer` operation. It is important to remark that any `deposit` or `withdraw` done to the contract plus any call to `collectRewards..`,  and any claim of rewards from the Reserve protocol, would setup the correct balances. So while it is true that transfers may in some cases not transfer rewards we expect this to only be slightly off.
+> 
 > To clarify this issue for users we will add a comment to the wrapper contract `StaticATokenLM` to clarify the situation with how rewards are handled on transfer.
 
 **[tbrent (Reserve) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1695970537)**
 
----
+
+
+***
 
 ## [[M-12] `_claimRewardsOnBehalf()` User's rewards may be lost](https://github.com/code-423n4/2023-07-reserve-findings/issues/10)
-
-_Submitted by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/10), also found by [carlitox477](https://github.com/code-423n4/2023-07-reserve-findings/issues/36)_
+*Submitted by [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/10), also found by [carlitox477](https://github.com/code-423n4/2023-07-reserve-findings/issues/36)*
 
 Incorrect determination of maximum rewards, which may lead to loss of user rewards.
 
@@ -1520,57 +1461,50 @@ Context
 **[cccz (judge) decreased severity to Medium](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1666915113)**
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1670279119):**
-
-> See comment on [issue 12](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1670267488).
+ > See comment on [issue 12](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1670267488).
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1695750350):**
-
-> After a thorough review we can confirm this is not an issue. This is the way it should work and that's the reason why there is a forceUpdate param. When forceUpdate == true, then you will always have the latest rewards to claim and the updated balance.
->
+ > After a thorough review we can confirm this is not an issue. This is the way it should work and that's the reason why there is a forceUpdate param. When forceUpdate == true, then you will always have the latest rewards to claim and the updated balance.
+> 
 > When is set to false, it will only distribute the rewards that were previously collected (the ones available in the contract). It is correct there might be additional rewards to be collected, but that can easily be done with another call to the same function using the forceUpdate == true.
->
-> There are no rewards "lost" in the process, no fix needs to be implemented. Even though `unclaimedRewards` is set to zero, then it will be populated with all the `pending` rewards again so the amount will be ok.
->
+> 
+> There are no rewards "lost" in the process, no fix needs to be implemented.  Even though `unclaimedRewards` is set to zero, then it will be populated with all the `pending` rewards again so the amount will be ok.
+> 
 > Moreover, the suggested fix would brick the function most of the time (as usually rewards are bigger than balance because it includes uncollected but pending rewards), and in that case it would attempt to transfer rewards not available in the contract. The check of just sending the balance in those cases is required.
 
 **[tbrent (Reserve) disputed](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1695967757)**
 
 **[cccz (judge) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700374987):**
-
-> @bin2chen - please take a look.<br>
-> It seems that since `_getPendingRewards` has a false parameter, `_unclaimedRewards` does not accumulate unclaimed rewards in the controller, so the rewards are not lost.
->
+ > @bin2chen - please take a look.<br>
+> It seems that since `_getPendingRewards` has a false parameter, `_unclaimedRewards` does not accumulate unclaimed rewards in the controller, so the rewards are not lost. 
 > ```solidity
-> function _updateUser(address user) internal {
->   uint256 balance = balanceOf(user);
->   if (balance > 0) {
->     uint256 pending = _getPendingRewards(user, balance, false);
->     _unclaimedRewards[user] = _unclaimedRewards[user].add(pending);
->   }
->   _updateUserSnapshotRewardsPerToken(user);
-> }
->
+>     function _updateUser(address user) internal {
+>         uint256 balance = balanceOf(user);
+>         if (balance > 0) {
+>             uint256 pending = _getPendingRewards(user, balance, false);
+>             _unclaimedRewards[user] = _unclaimedRewards[user].add(pending);
+>         }
+>         _updateUserSnapshotRewardsPerToken(user);
+>     }
 > ```
 
 **[bin2chen (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700422759):**
-
-> @cccz - `getPendingRewards(fresh = true)`.
+ > @cccz - `getPendingRewards(fresh = true)`.
 > It doesn't matter if `fresh` is`true` or `false`, because this can only be used to calculate the latest global `accRewardsPerToken`.
->
+> 
 > Since `_updateRewards()` must be executed before `_updateUser (user)` is executed to ensure that `accRewardsPerToken` is up-to-date, it does not matter whether `fresh` is true.
->
-> But the message above<br> > `Even though unclaimedRewards is set to zero, then it will be populated with all the pending rewards again so the amount will be ok.`
->
+> 
+> But the message above<br>
+> `Even though unclaimedRewards is set to zero, then it will be populated with all the pending rewards again so the amount will be ok.`
+> 
 > It confuses me a bit, I might need to take another look. I need to familiarize myself with this project again to see if I missed something.
 
 **[cccz (judge) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700432976):**
-
-> `_getClaimableRewards` returns `_unclaimedRewards + pendingRewards`, that is, `reward = _unclaimedRewards + pendingRewards`, so just setting `_unclaimedRewards` to 0 will not decrease pendingRewards, which may be somewhat helpful.
->
+ > `_getClaimableRewards` returns `_unclaimedRewards + pendingRewards`, that is, `reward = _unclaimedRewards + pendingRewards`, so just setting `_unclaimedRewards` to 0 will not decrease pendingRewards, which may be somewhat helpful.
 > ```solidity
 >         uint256 reward = _getClaimableRewards(onBehalfOf, balance, false);
 >         uint256 totBal = REWARD_TOKEN.balanceOf(address(this));
->
+> 
 >         if (reward > totBal) {
 >             reward = totBal;
 >         }
@@ -1591,93 +1525,93 @@ Context
 > ```
 
 **[bin2chen (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700449715):**
-
-> @cccz - `pendingRewards` is assumed to be 0.<br>
+ > @cccz - `pendingRewards` is assumed to be 0.<br>
 > But `_unclaimedRewards[user]` has a value, the point is that the value in there is not in the current contract, it's in `INCENTIVES_CONTROLLER`.
 > If it's cleared, it's gone.
 > I think I need to take another look.
 
 **[bin2chen (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700588497):**
-
-> @cccz - I'll keep my original point. Please help me see if I'm missing something. Thanks.
->
+ > @cccz - I'll keep my original point. Please help me see if I'm missing something. Thanks.
+> 
 > The current implementation only moves rewards to the current contract if `_collectAndUpdateRewards()` is executed.
->
+> 
 > `_updateRewards()` and `_updateUser()` are not triggered.
->
-> But `_unclaimedRewards[user]` is accumulated.<br> > `_accRewardsPerToken` and `_userSnapshotRewardsPerToken[user]` keeps getting bigger.
->
+> 
+> But `_unclaimedRewards[user]` is accumulated.<br>
+> `_accRewardsPerToken` and `_userSnapshotRewardsPerToken[user]` keeps getting bigger.
+> 
 > So that if no one has called `_collectAndUpdateRewards()` (i.e. forceUpdate=false is not called).
->
+> 
 > This way the rewards balance in the contract will always be zero.
->
+> 
 > After `_claimRewardsOnBehalf(forceUpdate=false)`.<br>
 > The user doesn't get any rewards, but `_unclaimedRewards[user]` is cleared to 0 and can't be refilled (note that it's not pendingRewards, assuming that pendingRewards is 0).
->
+> 
 > This way the rewards are lost.
 
 **[cccz (judge) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700781759):**
-
-> Need review from sponsors. @julianmrodri
+ > Need review from sponsors. @julianmrodri 
 
 **[bin2chen (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700850145):**
-
-> Here's a test case to look at.<br>
+ > Here's a test case to look at.<br>
 > Note: The balance of the current contract described above cannot be 0, it needs to be a little bit.
->
+> 
 > Add to StaticATokenLM.test.ts
->
+> 
 > ```js
-> it('test_lost', async () => {
->   const amountToDeposit = utils.parseEther('5')
->
->   // Just preparation
->   await waitForTx(await weth.deposit({ value: amountToDeposit.mul(2) }))
->   await waitForTx(
->     await weth.approve(staticAToken.address, amountToDeposit.mul(2), defaultTxParams)
->   )
->
->   // Depositing
->   await waitForTx(
->     await staticAToken.deposit(userSigner._address, amountToDeposit, 0, true, defaultTxParams)
->   )
->   await advanceTime(1)
->   //***** need small reward balace
->   await staticAToken.collectAndUpdateRewards()
->   const staticATokenBalanceFirst = await stkAave.balanceOf(staticAToken.address)
->   await advanceTime(60 * 60 * 24)
->
->   // Depositing
->   await waitForTx(
->     await staticAToken.deposit(userSigner._address, amountToDeposit, 0, true, defaultTxParams)
->   )
->
->   const beforeRewardBalance = await stkAave.balanceOf(userSigner._address)
->   const pendingRewardsBefore = await staticAToken.getClaimableRewards(userSigner._address)
->   console.log('user Reward Balance(Before):', beforeRewardBalance)
->
->   // user claim forceUpdate = false
->   await waitForTx(await staticAToken.connect(userSigner).claimRewardsToSelf(false))
->
->   const afterRewardBalance = await stkAave.balanceOf(userSigner._address)
->   const pendingRewardsAfter = await staticAToken.getClaimableRewards(userSigner._address)
->   console.log('user Reward Balance(After):', afterRewardBalance)
->
->   const pendingRewardsDecline = pendingRewardsBefore.toNumber() - pendingRewardsAfter.toNumber()
->   const getRewards = afterRewardBalance.toNumber() - beforeRewardBalance.toNumber()
->   console.log('user pendingRewardsBefore:', pendingRewardsBefore)
->   console.log('user pendingRewardsAfter:', pendingRewardsAfter)
->   const staticATokenBalanceAfter = await stkAave.balanceOf(staticAToken.address)
->   console.log('staticAToken Balance (before):', staticATokenBalanceFirst)
->   console.log('staticAToken Balance (After):', staticATokenBalanceAfter)
->   console.log('user lost:', pendingRewardsDecline - getRewards)
-> })
+>     it('test_lost', async () => {
+>       const amountToDeposit = utils.parseEther('5')
+> 
+>       // Just preparation
+>       await waitForTx(await weth.deposit({ value: amountToDeposit.mul(2) }))
+>       await waitForTx(
+>         await weth.approve(staticAToken.address, amountToDeposit.mul(2), defaultTxParams)
+>       )
+> 
+>       // Depositing
+>       await waitForTx(
+>         await staticAToken.deposit(userSigner._address, amountToDeposit, 0, true, defaultTxParams)
+>       )
+>       await advanceTime(1);
+>       //***** need small reward balace
+>       await staticAToken.collectAndUpdateRewards()
+>       const staticATokenBalanceFirst = await stkAave.balanceOf(staticAToken.address);
+>       await advanceTime(60 * 60 * 24)
+> 
+>       // Depositing
+>       await waitForTx(
+>         await staticAToken.deposit(userSigner._address, amountToDeposit, 0, true, defaultTxParams)
+>       )
+> 
+>       const beforeRewardBalance = await stkAave.balanceOf(userSigner._address);
+>       const pendingRewardsBefore = await staticAToken.getClaimableRewards(userSigner._address)
+>       console.log("user Reward Balance(Before):",beforeRewardBalance);
+> 
+>       // user claim forceUpdate = false
+>       await waitForTx(await staticAToken.connect(userSigner).claimRewardsToSelf(false))
+> 
+>       const afterRewardBalance = await stkAave.balanceOf(userSigner._address);
+>       const pendingRewardsAfter = await staticAToken.getClaimableRewards(userSigner._address)
+>       console.log("user Reward Balance(After):",afterRewardBalance);
+> 
+> 
+>       const pendingRewardsDecline = pendingRewardsBefore.toNumber() - pendingRewardsAfter.toNumber() ;
+>       const getRewards= afterRewardBalance.toNumber() - beforeRewardBalance.toNumber() ;
+>       console.log("user pendingRewardsBefore:",pendingRewardsBefore);
+>       console.log("user pendingRewardsAfter:",pendingRewardsAfter);
+>       const staticATokenBalanceAfter = await stkAave.balanceOf(staticAToken.address);
+>       console.log("staticAToken Balance (before):",staticATokenBalanceFirst);
+>       console.log("staticAToken Balance (After):",staticATokenBalanceAfter);
+>       console.log("user lost:",pendingRewardsDecline - getRewards);
+> 
+> 
+> 
+>     })
 > ```
->
 > ```console
 > `$` yarn test:plugins:integration --grep "test_lost"
->
->
+> 
+> 
 >   StaticATokenLM: aToken wrapper with static balances and liquidity mining
 > Duplicate definition of RewardsClaimed (RewardsClaimed(address,address,uint256), RewardsClaimed(address,address,address,uint256))
 >     Rewards - Small checks
@@ -1689,29 +1623,27 @@ Context
 > staticAToken Balance (After): BigNumber { value: "0" }
 > user lost: 1490276822494725
 >       ✔ test_lost (947ms)
->
->
+> 
+> 
 >   1 passing (24s)
 > ```
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1700897236):**
-
-> Thanks for the example. I'll review and let you know.
+ > Thanks for the example. I'll review and let you know.
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1701011453):**
-
-> @cccz & @bin2chen - Ok, the issue exists I can confirm now. This is a tricky one, nice catch. Found out that this was built this way on purpose. The idea is to allow the user to "sacrifice" some rewards for gas savings. You can see it in some of the tests, with comments like this one:
->
+ > @cccz & @bin2chen - Ok, the issue exists I can confirm now. This is a tricky one, nice catch. Found out that this was built this way on purpose. The idea is to allow the user to "sacrifice" some rewards for gas savings. You can see it in some of the tests, with comments like this one:
+> 
 > ```
 > expect(pendingRewards5).to.be.eq(0) // User "sacrifice" excess rewards to save on gas-costs
 > ```
->
+> 
 > We will discuss today what action we are taking with this issue.
->
+> 
 > In any case, the suggested mitigation does not address fully the issue, and causes the contract to fail under normal operations (simply try to run our test suite with that change). I believe we should probably address the main issue that the `_unclaimed` variable is set to 0, instead of to the rewards still pending to be collected.
->
+> 
 > What do you think about the function working this way? I ran a simple check and seems to address it at least for the example you provided. This mitigation was suggested on the other ticket linked here, it had some rounding issues but overall is the same.
->
+> 
 > ```
 >   function _claimRewardsOnBehalf(
 >         address onBehalfOf,
@@ -1721,45 +1653,43 @@ Context
 >         if (forceUpdate) {
 >             _collectAndUpdateRewards();
 >         }
->
+> 
 >         uint256 balance = balanceOf(onBehalfOf);
 >         uint256 reward = _getClaimableRewards(onBehalfOf, balance, false);
 >         uint256 totBal = REWARD_TOKEN.balanceOf(address(this));
->
+> 
 >         if (reward == 0) {
 >             return;
 >        }
->
+> 
 >         if (reward > totBal) {
 >             reward = totBal;
 >             _unclaimedRewards[onBehalfOf] -= reward.wadToRay();
 >         } else {
 >             _unclaimedRewards[onBehalfOf] = 0;
 >         }
->
+> 
 >         _updateUserSnapshotRewardsPerToken(onBehalfOf);
 >         REWARD_TOKEN.safeTransfer(receiver, reward);
 >     }
 > ```
->
+> 
 > Thanks for taking a look!
 
 **[bin2chen (warden) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1701163446):**
-
-> @julianmrodri - This one still has problems.
->
+ > @julianmrodri - This one still has problems.
 > 1. If there is a `pendingReward` may `underflow`<br>
->    For example:<br>
->    balance = 10<br> > \_unclaimedRewards[user]=9<br>
->    pendingRewards = 2
->
+> For example:<br>
+> balance = 10<br>
+> \_unclaimedRewards[user]=9<br>
+> pendingRewards = 2
+> 
 > `_unclaimedRewards[onBehalfOf] -= reward.wadToRay();` will underflow
->
+> 
 > 2. Finally executed `_updateUserSnapshotRewardsPerToken(onBehalfOf);`<br>
->    Then we need to accumulate `pendingRewards` to `_unclaimedRewards[user]`.
->
+> Then we need to accumulate `pendingRewards` to `_unclaimedRewards[user]`.
+> 
 > Personally, I feel that if we don't want to revert, try this:
->
 > ```diff
 >   function _claimRewardsOnBehalf(
 >         address onBehalfOf,
@@ -1769,15 +1699,15 @@ Context
 >         if (forceUpdate) {
 >             _collectAndUpdateRewards();
 >         }
->
+> 
 >         uint256 balance = balanceOf(onBehalfOf);
 >         uint256 reward = _getClaimableRewards(onBehalfOf, balance, false);
 >         uint256 totBal = REWARD_TOKEN.balanceOf(address(this));
->
+> 
 >         if (reward == 0) {
 >             return;
 >        }
->
+> 
 >         if (reward > totBal) {
 > +          // Insufficient balance resulting in no transfers out put into _unclaimedRewards[]
 > +           _unclaimedRewards[onBehalfOf] = (reward -totBal).wadToRay();
@@ -1786,35 +1716,35 @@ Context
 >         } else {
 >             _unclaimedRewards[onBehalfOf] = 0;
 >         }
->
+> 
 >         _updateUserSnapshotRewardsPerToken(onBehalfOf);
 >         REWARD_TOKEN.safeTransfer(receiver, reward);
 >     }
 > ```
->
-> This may still have this prompt.<br> > `expect(pendingRewards5).to.be.eq(0) // User "sacrifice" excess rewards to save on gas-costs`
->
+> 
+> This may still have this prompt.<br>
+> `expect(pendingRewards5).to.be.eq(0) // User "sacrifice" excess rewards to save on gas-costs`
+> 
 > But I feel that this use case should be changed. It is okay to sacrifice a little. If it is a lot, it is still necessary to prevent the user from executing it.
 
 **[pmckelvy1 (sponsor) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1701385272)**
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1701397555):**
-
-> @cccz @bin2chen - We had a group call and we decided to ACKNOWLEDGE the issue but we will not make code changes, just add a comment in the contract explaining this risk of losing rewards if you call it with the `false` parameter.
->
+ > @cccz @bin2chen - We had a group call and we decided to ACKNOWLEDGE the issue but we will not make code changes, just add a comment in the contract explaining this risk of losing rewards if you call it with the `false` parameter.
+> 
 > The reasons are:
->
-> - We do not expect Aave V2 Rewards to come back in practice.
-> - Our protocol is not exposed to this issue. Because in our code we always claim with the parameter set to `true`, and nobody can claim on behalf of the protocol with the `false` parameter, the Protocol will always get the latest rewards when claiming.
-> - It is up to the user to call this with true or false. They might see value in calling it with false and sacrificing some rewards, which was the original reason it was built this way. But they always have the option to call it with the true parameter which will behave normally. So we consider it more like an option they have and not that much of a bug. We also do not expect people holding this wrapper token besides using it in our protocol.
->
+> * We do not expect Aave V2 Rewards to come back in practice.
+> *  Our protocol is not exposed to this issue. Because in our code we always claim with the parameter set to `true`, and nobody can claim on behalf of the protocol with the `false` parameter, the Protocol will always get the latest rewards when claiming.
+> * It is up to the user to call this with true or false. They might see value in calling it with false and sacrificing some rewards, which was the original reason it was built this way. But they always have the option to call it with the true parameter which will behave normally. So we consider it more like an option they have and not that much of a bug.  We also do not expect people holding this wrapper token besides using it in our protocol.
+> 
 > However, we acknowledge and value the finding which was spot on and allowed us to understand the wrapper in more detail. Thanks for that!
 
----
+
+
+***
 
 ## [[M-13] Lack of protection when caling `CusdcV3Wrapper._withdraw`](https://github.com/code-423n4/2023-07-reserve-findings/issues/8)
-
-_Submitted by [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/8)_
+*Submitted by [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/8)*
 
 When unwrapping the `wComet` to its rebasing `comet`, users with an equivalent amount of `wComet` invoking `CusdcV3Wrapper._withdraw` at around the same time could end up having different percentage gains because `comet` is not linearly rebasing.
 
@@ -1825,44 +1755,43 @@ Moreover, the rate-determining `getUpdatedSupplyIndicies()` is an internal view 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L134-L170>
 
 ```solidity
-function _withdraw(
-  address operator,
-  address src,
-  address dst,
-  uint256 amount
-) internal {
-  if (!hasPermission(src, operator)) revert Unauthorized();
-  // {Comet}
-  uint256 srcBalUnderlying = underlyingBalanceOf(src);
-  if (srcBalUnderlying < amount) amount = srcBalUnderlying;
-  if (amount == 0) revert BadAmount();
+    function _withdraw(
+        address operator,
+        address src,
+        address dst,
+        uint256 amount
+    ) internal {
+        if (!hasPermission(src, operator)) revert Unauthorized();
+        // {Comet}
+        uint256 srcBalUnderlying = underlyingBalanceOf(src);
+        if (srcBalUnderlying < amount) amount = srcBalUnderlying;
+        if (amount == 0) revert BadAmount();
 
-  underlyingComet.accrueAccount(address(this));
-  underlyingComet.accrueAccount(src);
+        underlyingComet.accrueAccount(address(this));
+        underlyingComet.accrueAccount(src);
 
-  uint256 srcBalPre = balanceOf(src);
-  CometInterface.UserBasic memory wrappedBasic = underlyingComet.userBasic(address(this));
-  int104 wrapperPrePrinc = wrappedBasic.principal;
+        uint256 srcBalPre = balanceOf(src);
+        CometInterface.UserBasic memory wrappedBasic = underlyingComet.userBasic(address(this));
+        int104 wrapperPrePrinc = wrappedBasic.principal;
 
-  // conservative rounding in favor of the wrapper
-  IERC20(address(underlyingComet)).safeTransfer(dst, (amount / 10) * 10);
+        // conservative rounding in favor of the wrapper
+        IERC20(address(underlyingComet)).safeTransfer(dst, (amount / 10) * 10);
 
-  wrappedBasic = underlyingComet.userBasic(address(this));
-  int104 wrapperPostPrinc = wrappedBasic.principal;
+        wrappedBasic = underlyingComet.userBasic(address(this));
+        int104 wrapperPostPrinc = wrappedBasic.principal;
 
-  // safe to cast because principal can't go negative, wrapper is not borrowing
-  uint256 burnAmt = uint256(uint104(wrapperPrePrinc - wrapperPostPrinc));
-  // occasionally comet will withdraw 1-10 wei more than we asked for.
-  // this is ok because 9 times out of 10 we are rounding in favor of the wrapper.
-  // safe because we have already capped the comet withdraw amount to src underlying bal.
-  // untested:
-  //      difficult to trigger, depends on comet rules regarding rounding
-  if (srcBalPre <= burnAmt) burnAmt = srcBalPre;
+        // safe to cast because principal can't go negative, wrapper is not borrowing
+        uint256 burnAmt = uint256(uint104(wrapperPrePrinc - wrapperPostPrinc));
+        // occasionally comet will withdraw 1-10 wei more than we asked for.
+        // this is ok because 9 times out of 10 we are rounding in favor of the wrapper.
+        // safe because we have already capped the comet withdraw amount to src underlying bal.
+        // untested:
+        //      difficult to trigger, depends on comet rules regarding rounding
+        if (srcBalPre <= burnAmt) burnAmt = srcBalPre;
 
-  accrueAccountRewards(src);
-  _burn(src, safe104(burnAmt));
-}
-
+        accrueAccountRewards(src);
+        _burn(src, safe104(burnAmt));
+    }
 ```
 
 As can be seen in the code block of function `_withdraw` above, `underlyingBalanceOf(src)` is first invoked.
@@ -1870,14 +1799,13 @@ As can be seen in the code block of function `_withdraw` above, `underlyingBalan
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L225-L231>
 
 ```solidity
-function underlyingBalanceOf(address account) public view returns (uint256) {
-  uint256 balance = balanceOf(account);
-  if (balance == 0) {
-    return 0;
-  }
-  return convertStaticToDynamic(safe104(balance));
-}
-
+    function underlyingBalanceOf(address account) public view returns (uint256) {
+        uint256 balance = balanceOf(account);
+        if (balance == 0) {
+            return 0;
+        }
+        return convertStaticToDynamic(safe104(balance));
+    }
 ```
 
 Next, function `convertStaticToDynamic` is invoked.
@@ -1885,11 +1813,10 @@ Next, function `convertStaticToDynamic` is invoked.
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L241-L244>
 
 ```solidity
-function convertStaticToDynamic(uint104 amount) public view returns (uint256) {
-  (uint64 baseSupplyIndex, ) = getUpdatedSupplyIndicies();
-  return presentValueSupply(baseSupplyIndex, amount);
-}
-
+    function convertStaticToDynamic(uint104 amount) public view returns (uint256) {
+        (uint64 baseSupplyIndex, ) = getUpdatedSupplyIndicies();
+        return presentValueSupply(baseSupplyIndex, amount);
+    }
 ```
 
 And next, function `getUpdatedSupplyIndicies` is invoked. As can be seen in its code logic, the returned value of `baseSupplyIndex_` is determined by the changing `supplyRate`.
@@ -1897,23 +1824,22 @@ And next, function `getUpdatedSupplyIndicies` is invoked. As can be seen in its 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L298-L313>
 
 ```solidity
-function getUpdatedSupplyIndicies() internal view returns (uint64, uint64) {
-  TotalsBasic memory totals = underlyingComet.totalsBasic();
-  uint40 timeDelta = uint40(block.timestamp) - totals.lastAccrualTime;
-  uint64 baseSupplyIndex_ = totals.baseSupplyIndex;
-  uint64 trackingSupplyIndex_ = totals.trackingSupplyIndex;
-  if (timeDelta > 0) {
-    uint256 baseTrackingSupplySpeed = underlyingComet.baseTrackingSupplySpeed();
-    uint256 utilization = underlyingComet.getUtilization();
-    uint256 supplyRate = underlyingComet.getSupplyRate(utilization);
-    baseSupplyIndex_ += safe64(mulFactor(baseSupplyIndex_, supplyRate * timeDelta));
-    trackingSupplyIndex_ += safe64(
-      divBaseWei(baseTrackingSupplySpeed * timeDelta, totals.totalSupplyBase)
-    );
-  }
-  return (baseSupplyIndex_, trackingSupplyIndex_);
-}
-
+    function getUpdatedSupplyIndicies() internal view returns (uint64, uint64) {
+        TotalsBasic memory totals = underlyingComet.totalsBasic();
+        uint40 timeDelta = uint40(block.timestamp) - totals.lastAccrualTime;
+        uint64 baseSupplyIndex_ = totals.baseSupplyIndex;
+        uint64 trackingSupplyIndex_ = totals.trackingSupplyIndex;
+        if (timeDelta > 0) {
+            uint256 baseTrackingSupplySpeed = underlyingComet.baseTrackingSupplySpeed();
+            uint256 utilization = underlyingComet.getUtilization();
+            uint256 supplyRate = underlyingComet.getSupplyRate(utilization);
+            baseSupplyIndex_ += safe64(mulFactor(baseSupplyIndex_, supplyRate * timeDelta));
+            trackingSupplyIndex_ += safe64(
+                divBaseWei(baseTrackingSupplySpeed * timeDelta, totals.totalSupplyBase)
+            );
+        }
+        return (baseSupplyIndex_, trackingSupplyIndex_);
+    }
 ```
 
 The returned value of `baseSupplyIndex` is then inputted into function `principalValueSupply` where the lower the value of `baseSupplyIndex`, the higher the `principalValueSupply` or simply put, the lesser the `burn` amount.
@@ -1921,14 +1847,13 @@ The returned value of `baseSupplyIndex` is then inputted into function `principa
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CometHelpers.sol#L29-L35>
 
 ```solidity
-function principalValueSupply(uint64 baseSupplyIndex_, uint256 presentValue_)
-  internal
-  pure
-  returns (uint104)
-{
-  return safe104((presentValue_ * BASE_INDEX_SCALE) / baseSupplyIndex_);
-}
-
+    function principalValueSupply(uint64 baseSupplyIndex_, uint256 presentValue_)
+        internal
+        pure
+        returns (uint104)
+    {
+        return safe104((presentValue_ * BASE_INDEX_SCALE) / baseSupplyIndex_);
+    }
 ```
 
 ### Recommended Mitigation Steps
@@ -1942,14 +1867,14 @@ Timing
 **[tbrent (Reserve) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/8#issuecomment-1670267745)**
 
 **[pmckelvy1 (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/8#issuecomment-1688439465):**
+ > Users can always use `convertStaticToDynamic` and `convertDynamicToStatic` to get the exchange rates as they both use `getUpdatedSupplyIndicies()`. The issue being flagged here (rebase rate is dynamic) is inherent to the comet itself (and pretty much any rebasing token for that matter), and not something the wrapper needs to be concerned about.
 
-> Users can always use `convertStaticToDynamic` and `convertDynamicToStatic` to get the exchange rates as they both use `getUpdatedSupplyIndicies()`. The issue being flagged here (rebase rate is dynamic) is inherent to the comet itself (and pretty much any rebasing token for that matter), and not something the wrapper needs to be concerned about.
 
----
+
+***
 
 ## [[M-14] Lack of protection when withdrawing Static Atoken ](https://github.com/code-423n4/2023-07-reserve-findings/issues/7)
-
-_Submitted by [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/7)_
+*Submitted by [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/7)*
 
 The Aave plugin is associated with [an ever-increasing exchange rate](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L26). The earlier a user wraps the AToken, the more Static Atoken will be minted and understandably no slippage protection is needed.
 
@@ -1987,10 +1912,9 @@ As can be seen in the code block of function `_withdraw` above, choosing `static
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L297-L299>
 
 ```solidity
-function _staticToDynamicAmount(uint256 amount, uint256 rate_) internal pure returns (uint256) {
-  return amount.rayMul(rate_);
-}
-
+    function _staticToDynamicAmount(uint256 amount, uint256 rate_) internal pure returns (uint256) {
+        return amount.rayMul(rate_);
+    }
 ```
 
 Similarly, choosing `dynamicAmount > 0` will have a higher than expected amount of Static Atoken to burn.
@@ -1998,10 +1922,9 @@ Similarly, choosing `dynamicAmount > 0` will have a higher than expected amount 
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L293-L295>
 
 ```solidity
-function _dynamicToStaticAmount(uint256 amount, uint256 rate_) internal pure returns (uint256) {
-  return amount.rayDiv(rate_);
-}
-
+    function _dynamicToStaticAmount(uint256 amount, uint256 rate_) internal pure returns (uint256) {
+        return amount.rayDiv(rate_);
+    }
 ```
 
 ### Recommended Mitigation Steps
@@ -2015,24 +1938,24 @@ Timing
 **[tbrent (Reserve) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/7#issuecomment-1670268069)**
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/7#issuecomment-1695796001):**
-
-> Hi, as mentioned before we acknowledge the existence of this issue.
->
-> But on the other hand we will not implement fixes or changes. We believe it is the responsibility of the user to decide when to wrap/unwrap these tokens and these interactions are in general outside of the protocol behavior.
->
-> In addition to this the rate is accesible for the user to make that decision, and we don't expect these rates to increase abruptly for this wrapper, so in reality we might be adding a feature that will probably not be used in practice.
->
+ > Hi, as mentioned before we acknowledge the existence of this issue. 
+> 
+> But on the other hand we will not implement fixes or changes. We believe it is the responsibility of the user to decide when to wrap/unwrap these tokens and these interactions are in general outside of the protocol behavior. 
+> 
+> In addition to this the rate is accesible for the user to make that decision, and we don't expect these rates to increase abruptly for this wrapper, so in reality we might be adding a feature that will probably not be used in practice. 
+> 
 > It is important to remark this is something that exists in any wrapper for rebasing tokens we use, whether it is our own, or developed by other protocol teams. And generally we don't see implemented in those wrappers slippage protection or a feature like the one suggested here.
 
----
+
+
+***
 
 ## [[M-15] Potential Loss of Rewards During Token Transfers in StaticATokenLM.sol](https://github.com/code-423n4/2023-07-reserve-findings/issues/4)
-
-_Submitted by [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/4)_
+*Submitted by [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/4)*
 
 This issue could lead to a permanent loss of rewards for the transferer of the token. During the token transfer process, the `_beforeTokenTransfer` function updates rewards for both the sender and the receiver. However, due to the specific call order and the behavior of the `_updateUser` function and the `_getPendingRewards` function, some rewards may not be accurately accounted for.
 
-The crux of the problem lies in the fact that the `_getPendingRewards` function, when called with the `fresh` parameter set to `false`, may not account for all the latest rewards from the `INCENTIVES_CONTROLLER`. As a result, the `_updateUserSnapshotRewardsPerToken` function, which relies on the output of the `_getPendingRewards` function, could end up missing out on some rewards. This could be detrimental to the token sender, especially the `Backing Manager` whenever `RToken` is redeemed. Apparently, most users having wrapped their `AToken`, would automatically use it to issue `RToken` as part of the basket range of backing collaterals and be minimally impacted. But it would have the Reserve Protocol collectively affected depending on the frequency and volume of RToken redemption and the time elapsed since `_updateRewards()` or `_collectAndUpdateRewards()` was last called. The same impact shall also apply when making token transfers to successful auction bidders.
+The crux of the problem lies in the fact that the `_getPendingRewards` function, when called with the `fresh` parameter set to `false`, may not account for all the latest rewards from the `INCENTIVES_CONTROLLER`. As a result, the `_updateUserSnapshotRewardsPerToken` function, which relies on the output of the `_getPendingRewards` function, could end up missing out on some rewards. This could be detrimental to the token sender, especially the `Backing Manager` whenever `RToken` is redeemed. Apparently, most users having wrapped their `AToken`, would automatically use it to issue `RToken` as part of the basket range of backing collaterals and be minimally impacted. But it would have the Reserve  Protocol collectively affected depending on the frequency and volume of RToken redemption and the time elapsed since `_updateRewards()` or `_collectAndUpdateRewards()` was last called. The same impact shall also apply when making token transfers to successful auction bidders.
 
 ### Proof of Concept
 
@@ -2041,27 +1964,26 @@ As denoted in the function NatSpec below, function `_beforeTokenTransfer` update
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L367-L386>
 
 ```solidity
-/**
- * @notice Updates rewards for senders and receiver in a transfer (not updating rewards for address(0))
- * @param from The address of the sender of tokens
- * @param to The address of the receiver of tokens
- */
-function _beforeTokenTransfer(
-  address from,
-  address to,
-  uint256
-) internal override {
-  if (address(INCENTIVES_CONTROLLER) == address(0)) {
-    return;
-  }
-  if (from != address(0)) {
-    _updateUser(from);
-  }
-  if (to != address(0)) {
-    _updateUser(to);
-  }
-}
-
+   /**
+     * @notice Updates rewards for senders and receiver in a transfer (not updating rewards for address(0))
+     * @param from The address of the sender of tokens
+     * @param to The address of the receiver of tokens
+     */
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal override {
+        if (address(INCENTIVES_CONTROLLER) == address(0)) {
+            return;
+        }
+        if (from != address(0)) {
+            _updateUser(from);
+        }
+        if (to != address(0)) {
+            _updateUser(to);
+        }
+    }
 ```
 
 When function `_updateUser` is respectively invoked, `_getPendingRewards(user, balance, false)` is called.
@@ -2069,19 +1991,18 @@ When function `_updateUser` is respectively invoked, `_getPendingRewards(user, b
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L543-L550>
 
 ```solidity
-/**
- * @notice Adding the pending rewards to the unclaimed for specific user and updating user index
- * @param user The address of the user to update
- */
-function _updateUser(address user) internal {
-  uint256 balance = balanceOf(user);
-  if (balance > 0) {
-    uint256 pending = _getPendingRewards(user, balance, false);
-    _unclaimedRewards[user] = _unclaimedRewards[user].add(pending);
-  }
-  _updateUserSnapshotRewardsPerToken(user);
-}
-
+    /**
+     * @notice Adding the pending rewards to the unclaimed for specific user and updating user index
+     * @param user The address of the user to update
+     */
+    function _updateUser(address user) internal {
+        uint256 balance = balanceOf(user);
+        if (balance > 0) {
+            uint256 pending = _getPendingRewards(user, balance, false);
+            _unclaimedRewards[user] = _unclaimedRewards[user].add(pending);
+        }
+        _updateUserSnapshotRewardsPerToken(user);
+    }
 ```
 
 However, because the third parameter has been entered `false`, the third if block of function `_getPendingRewards` is skipped.
@@ -2089,46 +2010,46 @@ However, because the third parameter has been entered `false`, the third if bloc
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L552-L591>
 
 ```solidity
-/**
- * @notice Compute the pending in RAY (rounded down). Pending is the amount to add (not yet unclaimed) rewards in RAY (rounded down).
- * @param user The user to compute for
- * @param balance The balance of the user
- * @param fresh Flag to account for rewards not claimed by contract yet
- * @return The amount of pending rewards in RAY
- */
-function _getPendingRewards(
-  address user,
-  uint256 balance,
-  bool fresh
-) internal view returns (uint256) {
-  if (address(INCENTIVES_CONTROLLER) == address(0)) {
-    return 0;
-  }
+    /**
+     * @notice Compute the pending in RAY (rounded down). Pending is the amount to add (not yet unclaimed) rewards in RAY (rounded down).
+     * @param user The user to compute for
+     * @param balance The balance of the user
+     * @param fresh Flag to account for rewards not claimed by contract yet
+     * @return The amount of pending rewards in RAY
+     */
+    function _getPendingRewards(
+        address user,
+        uint256 balance,
+        bool fresh
+    ) internal view returns (uint256) {
+        if (address(INCENTIVES_CONTROLLER) == address(0)) {
+            return 0;
+        }
 
-  if (balance == 0) {
-    return 0;
-  }
+        if (balance == 0) {
+            return 0;
+        }
 
-  uint256 rayBalance = balance.wadToRay();
+        uint256 rayBalance = balance.wadToRay();
 
-  uint256 supply = totalSupply();
-  uint256 accRewardsPerToken = _accRewardsPerToken;
+        uint256 supply = totalSupply();
+        uint256 accRewardsPerToken = _accRewardsPerToken;
 
-  if (supply != 0 && fresh) {
-    address[] memory assets = new address[](1);
-    assets[0] = address(ATOKEN);
+        if (supply != 0 && fresh) {
+            address[] memory assets = new address[](1);
+            assets[0] = address(ATOKEN);
 
-    uint256 freshReward = INCENTIVES_CONTROLLER.getRewardsBalance(assets, address(this));
-    uint256 lifetimeRewards = _lifetimeRewardsClaimed.add(freshReward);
-    uint256 rewardsAccrued = lifetimeRewards.sub(_lifetimeRewards).wadToRay();
-    accRewardsPerToken = accRewardsPerToken.add(
-      (rewardsAccrued).rayDivNoRounding(supply.wadToRay())
-    );
-  }
+            uint256 freshReward = INCENTIVES_CONTROLLER.getRewardsBalance(assets, address(this));
+            uint256 lifetimeRewards = _lifetimeRewardsClaimed.add(freshReward);
+            uint256 rewardsAccrued = lifetimeRewards.sub(_lifetimeRewards).wadToRay();
+            accRewardsPerToken = accRewardsPerToken.add(
+                (rewardsAccrued).rayDivNoRounding(supply.wadToRay())
+            );
+        }
 
-  return rayBalance.rayMulNoRounding(accRewardsPerToken.sub(_userSnapshotRewardsPerToken[user]));
-}
-
+        return
+            rayBalance.rayMulNoRounding(accRewardsPerToken.sub(_userSnapshotRewardsPerToken[user]));
+    }
 ```
 
 Hence, `accRewardsPerToken` may not be updated with the latest rewards from `INCENTIVES_CONTROLLER`. Consequently, `_updateUserSnapshotRewardsPerToken(user)` will miss out on claiming some rewards and is a loss to the StaticAtoken transferrer.
@@ -2136,14 +2057,13 @@ Hence, `accRewardsPerToken` may not be updated with the latest rewards from `INC
 <https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L531-L537>
 
 ```solidity
-/**
- * @notice Update the rewardDebt for a user with balance as his balance
- * @param user The user to update
- */
-function _updateUserSnapshotRewardsPerToken(address user) internal {
-  _userSnapshotRewardsPerToken[user] = _accRewardsPerToken;
-}
-
+    /**
+     * @notice Update the rewardDebt for a user with balance as his balance
+     * @param user The user to update
+     */
+    function _updateUserSnapshotRewardsPerToken(address user) internal {
+        _userSnapshotRewardsPerToken[user] = _accRewardsPerToken;
+    }
 ```
 
 Ironically, this works out as a zero-sum game where the loss of the transferrer is a gain to the transferee. But most assuredly, the Backing Manager is going to end up incurring more losses than gains in this regard.
@@ -2161,30 +2081,28 @@ Token-Transfer
 **[cccz (judge) decreased severity to Medium](https://github.com/code-423n4/2023-07-reserve-findings/issues/4#issuecomment-1666907721)**
 
 **[tbrent (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/4#issuecomment-1670279270):**
-
-> See comment on [issue 12](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1670267488).
+ > See comment on [issue 12](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1670267488).
 
 **[julianmrodri (Reserve) commented](https://github.com/code-423n4/2023-07-reserve-findings/issues/4#issuecomment-1695841054):**
-
-> We will mark this issue as Sponsor Acknowledged. It is true the situation described by the warden and that's the behavior we observe. However we will not be implementing any change in the code (besides adding some comments) for the following reasons:
->
-> - We do not expect rewards in Aave V2 to come back.
-> - We checked with Aave and we believe the original reason for building it this way still holds, and that is for gas purposes. Even if for some reason rewards on AAve V2 come back the cost of updating the user rewards on every transfer outweighs the rewards that may be left "uncollected" after a `transfer` operation. It is important to remark that any `deposit` or `withdraw` done to the contract plus any call to `collectRewards..`, and any claim of rewards from the Reserve protocol, would setup the correct balances. So while it is true that transfers may in some cases not transfer rewards we expect this to only be slightly off.
->
+ > We will mark this issue as Sponsor Acknowledged. It is true the situation described by the warden and that's the behavior we observe. However we will not be implementing any change in the code (besides adding some comments) for the following reasons:
+> * We do not expect rewards in Aave V2 to come back.
+> * We checked with Aave and we believe the original reason for building it this way still holds, and that is for gas purposes. Even if for some reason rewards on AAve V2 come back the cost of updating the user rewards on every transfer outweighs the rewards that may be left "uncollected" after a `transfer` operation. It is important to remark that any `deposit` or `withdraw` done to the contract plus any call to `collectRewards..`, and any claim of rewards from the Reserve protocol,  would setup the correct balances. So while it is true that transfers may in some cases not transfer rewards we expect this to only be slightly off.
+> 
 > To clarify this issue for users we will add a comment to the wrapper contract `StaticATokenLM` to clarify the situation with how rewards are handled on transfer.
 
 **[tbrent (Reserve) acknowledged](https://github.com/code-423n4/2023-07-reserve-findings/issues/4#issuecomment-1695970933)**
 
----
+
+
+***
 
 # Low Risk and Non-Critical Issues
 
 For this audit, 6 reports were submitted by wardens detailing low risk and non-critical issues. The [report highlighted below](https://github.com/code-423n4/2023-07-reserve-findings/issues/38) by **auditor0517** received the top score from the judge.
 
-_The following wardens also submitted reports: [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/26), [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/16), [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/9), [carlitox477](https://github.com/code-423n4/2023-07-reserve-findings/issues/41), and [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/34)._
+*The following wardens also submitted reports: [ronnyx2017](https://github.com/code-423n4/2023-07-reserve-findings/issues/26), [bin2chen](https://github.com/code-423n4/2023-07-reserve-findings/issues/16), [RaymondFam](https://github.com/code-423n4/2023-07-reserve-findings/issues/9), [carlitox477](https://github.com/code-423n4/2023-07-reserve-findings/issues/41), and [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/34).*
 
 ## [L-01] Unsafe max approve
-
 It's not recommended to approve `type(uint256).max` for safety. We should approve a relevant amount every time.
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L105
@@ -2200,7 +2118,6 @@ pool_.approve(address(stakingContract_), type(uint256).max);
 ```
 
 ## [L-02] Possible reentrancy
-
 Users might manipulate `wrapperPostPrinc` inside the transfer hook. With the current `underlyingComet` token, there is no impact as it doesn't have any hook but it's recommended to add a `nonReentrant` modifier to `_deposit()/_withdraw()`.
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L96
@@ -2216,7 +2133,6 @@ IERC20(address(underlyingComet)).safeTransfer(dst, (amount / 10) * 10);
 ```
 
 ## [L-03] Unsafe downcasting
-
 `feeds[i].length` might be downcasted wrongly when it's greater than `type(uint8).max`. `maxFeedsLength()` might pass the [requirement](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L105) when `config.feeds` has many elements(like 256).
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L330
@@ -2226,7 +2142,6 @@ maxLength = uint8(Math.max(maxLength, feeds[i].length));
 ```
 
 ## [L-04] Reverts on 0 transfer
-
 It deposits 0 amount to the staking contract to claim rewards but it might revert [during the 0 transfer](https://github.com/stargate-protocol/stargate/blob/main/contracts/LPStaking.sol#L161). There is no problem with the current `lpToken` but good to keep in mind.
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/stargate/StargateRewardableWrapper.sol#L48
@@ -2236,7 +2151,6 @@ stakingContract.deposit(poolId, 0);
 ```
 
 ## [L-05] Wrong comment
-
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L146
 
 ```solidity
@@ -2251,7 +2165,6 @@ stakingContract.deposit(poolId, 0);
 ```
 
 ## [L-06] Unsafe permission
-
 `WrappedERC20` uses a permission mechanism and operators can have an infinite allowance once approved. It might be inconvenient/dangerous for some users.
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L84
@@ -2283,18 +2196,15 @@ stakingContract.deposit(poolId, 0);
 ```
 
 ## [L-07] Typical first depositor issue in `RewardableERC4626Vault`
-
 It's recommended to follow the [instructions](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/vendor/oz/ERC4626.sol#L39-L43).
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC4626Vault.sol#L20
 
 ```solidity
 abstract contract RewardableERC4626Vault is ERC4626, RewardableERC20 {}
-
 ```
 
 ## [N-01] Typo
-
 `_accumuatedRewards` => `_accumulatedRewards`
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L57
@@ -2304,7 +2214,6 @@ uint256 _accumuatedRewards = accumulatedRewards[account];
 ```
 
 ## [N-02] Needless accrue for src
-
 We don't need to accrue for `src` because we don't use any information of `src` and that info will be accrued during the [underlyingComet transfer](https://github.com/compound-finance/comet/blob/main/contracts/Comet.sol#L942).
 
 - https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CusdcV3Wrapper.sol#L91
@@ -2316,19 +2225,20 @@ We don't need to accrue for `src` because we don't use any information of `src` 
     CometInterface.UserBasic memory wrappedBasic = underlyingComet.userBasic(address(this));
     int104 wrapperPrePrinc = wrappedBasic.principal;
 
-    IERC20(address(underlyingComet)).safeTransferFrom(src, address(this), amount);
+    IERC20(address(underlyingComet)).safeTransferFrom(src, address(this), amount); 
 ```
 
----
+
+
+***
 
 # Gas Optimizations
 
 For this audit, 2 reports were submitted by wardens detailing gas optimizations. The [report highlighted below](https://github.com/code-423n4/2023-07-reserve-findings/issues/18) by **RaymondFam** received the top score from the judge.
 
-_The following wardens also submitted reports: [carlitox477](https://github.com/code-423n4/2023-07-reserve-findings/issues/40)._
+*The following wardens also submitted reports: [carlitox477](https://github.com/code-423n4/2023-07-reserve-findings/issues/40).*
 
 ## [G-01] Immutable over constant
-
 The use of constant `keccak` variables results in extra hashing whenever the variable is used, increasing gas costs relative to just storing the output hash. Changing to immutable will only perform hashing on contract deployment which will save gas.
 
 Here are some of the instances entailed.
@@ -2356,39 +2266,36 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-02] Unreachable code lines
-
-The following else block in the function logic of `refresh()` is never reachable considering [`tryPrice()`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L64-L84) does not have (0, FIX_MAX) catered for. Any upriced data would have been sent to the catch block. Other than Asset.sol, similarly wasted logic is also exhibited in [`AppreciatingFiatCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/AppreciatingFiatCollateral.sol#L113-L116), [`FiatCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/FiatCollateral.sol#L136-L139), [`CTokenV3Collateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CTokenV3Collateral.sol#L105-L110), [`CurveStableCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableCollateral.sol#L110-L115), [`StargatePoolFiatCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/stargate/StargatePoolFiatCollateral.sol#L87-L90).
+The following else block in the function logic of `refresh()` is never reachable considering [`tryPrice()`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L64-L84) does not have (0, FIX\_MAX) catered for. Any upriced data would have been sent to the catch block. Other than Asset.sol, similarly wasted logic is also exhibited in [`AppreciatingFiatCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/AppreciatingFiatCollateral.sol#L113-L116), [`FiatCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/FiatCollateral.sol#L136-L139), [`CTokenV3Collateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/compoundv3/CTokenV3Collateral.sol#L105-L110), [`CurveStableCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/CurveStableCollateral.sol#L110-L115), [`StargatePoolFiatCollateral.refresh`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/stargate/StargatePoolFiatCollateral.sol#L87-L90).  
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L86-L106
 
 ```solidity
-/// Should not revert
-/// Refresh saved prices
-function refresh() public virtual override {
-  try this.tryPrice() returns (uint192 low, uint192 high, uint192) {
-    // {UoA/tok}, {UoA/tok}
-    // (0, 0) is a valid price; (0, FIX_MAX) is unpriced
+    /// Should not revert
+    /// Refresh saved prices
+    function refresh() public virtual override {
+        try this.tryPrice() returns (uint192 low, uint192 high, uint192) {
+            // {UoA/tok}, {UoA/tok}
+            // (0, 0) is a valid price; (0, FIX_MAX) is unpriced
 
-    // Save prices if priced
-    if (high < FIX_MAX) {
-      savedLowPrice = low;
-      savedHighPrice = high;
-      lastSave = uint48(block.timestamp);
-    } else {
-      // must be unpriced
-      assert(low == 0);
+            // Save prices if priced
+            if (high < FIX_MAX) {
+                savedLowPrice = low;
+                savedHighPrice = high;
+                lastSave = uint48(block.timestamp);
+            } else {
+                // must be unpriced
+                assert(low == 0);
+            }
+        } catch (bytes memory errData) {
+            // see: docs/solidity-style.md#Catching-Empty-Data
+            if (errData.length == 0) revert(); // solhint-disable-line reason-string
+        }
     }
-  } catch (bytes memory errData) {
-    // see: docs/solidity-style.md#Catching-Empty-Data
-    if (errData.length == 0) revert(); // solhint-disable-line reason-string
-  }
-}
-
 ```
 
 ## [G-03] Redundant `return` in the `try` clause
-
-This `try` clause has already returned `low` and `high` and is returning the same things again in its nested logic, which is inexpedient and unnecessary. Similar behavior is also found in [`Asset.price`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L112-L121).
+This `try` clause has already returned `low` and `high` and is returning the same things again in its nested logic, which is inexpedient and unnecessary. Similar behavior is also found in [`Asset.price`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol#L112-L121). 
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/RTokenAsset.sol#L86-L94
 
@@ -2405,8 +2312,7 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-04] Unneeded import in `RTokenAsset.sol`
-
-`IRToken.sol` has already been imported by `IMain.sol`, making the former an unneeded import.
+`IRToken.sol` has already been imported by `IMain.sol`, making the former an unneeded import. 
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/RTokenAsset.sol#L5-L6
 
@@ -2416,7 +2322,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-05] Cached variables not efficiently used
-
 In `StaticATokenLM._updateRewards`, the state variable `_lifetimeRewardsClaimed` is doubly used in the following code logic when `rewardsAccrued` could simply/equally be assigned `freshRewards.wadToRay()`. This extra gas incurring behaviour is also exhibited in [`StaticATokenLM._collectAndUpdateRewards`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L428-L434), and [`StaticATokenLM._getPendingRewards`](https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L581-L583).
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenLM.sol#L406-L408
@@ -2429,7 +2334,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-06] Identical for loop check
-
 The if block in the constructor of PoolTokens.sol entails identical if block checks that may be moved outside the loop to save gas.
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L123-L130
@@ -2449,7 +2353,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-07] Unneeded ternary logic, booleans, and second condition checks
-
 In the constructor of PoolTokens.sol, the second condition of the following require statement mandates that at least one feed is associated with each token.
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L106-L109
@@ -2460,8 +2363,7 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
             "each token needs at least 1 price feed"
         );
 ```
-
-Additionally, the following code lines signify that a minimum of 2 tokens will be associated with the Curve base pool. Otherwise, if `nTokens` is less than 2 or 1, assigning `token0` and/or `token1` will revert due to accessing out-of-bound array elements.
+Additionally, the following code lines signify that a minimum of 2 tokens will be associated with the Curve base pool. Otherwise, if `nTokens` is less than 2 or 1, assigning `token0` and/or `token1` will revert due to accessing out-of-bound array elements. 
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L132-L135
 
@@ -2471,7 +2373,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
         token2 = (nTokens > 2) ? tokens[2] : IERC20Metadata(address(0));
         token3 = (nTokens > 3) ? tokens[3] : IERC20Metadata(address(0));
 ```
-
 Under this context, the following ternary logic along with the use of boolean `more` is therefore deemed unnecessary.
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L143-L154
@@ -2491,7 +2392,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
             require(_t0error0 < FIX_ONE, "t0error0 too large");
 -        }
 ```
-
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L166-L177
 
 ```diff
@@ -2509,7 +2409,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
             require(_t1error0 < FIX_ONE, "t1error0 too large");
 -        }
 ```
-
 Similarly, the following second conditional checks are also not needed.
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L189-L190
@@ -2519,7 +2418,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 -        more = config.feeds.length > 2 && config.feeds[2].length > 0;
 +        more = config.feeds.length > 2;
 ```
-
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/curve/PoolTokens.sol#L210-L211
 
 ```diff
@@ -2529,7 +2427,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-08] Use of named returns for local variables saves gas
-
 You can have further advantages in terms of gas cost by simply using named return values as temporary local variables.
 
 For instance, the code block below may be refactored as follows:
@@ -2549,7 +2446,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-09] `+=` and `-=` cost more gas
-
 `+=` and `-=` generally cost 22 more gas than writing out the assigned equation explicitly. The amount of gas wasted can be quite sizable when repeatedly operated in a loop.
 
 For instance, the `+=` instance below may be refactored as follows:
@@ -2562,13 +2458,11 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-10] Function order affects gas consumption
-
 The order of function will also have an impact on gas consumption. Because in smart contracts, there is a difference in the order of the functions. Each position will have an extra 22 gas. The order is dependent on method ID. So, if you rename the frequently accessed function to more early method ID, you can save gas cost. Please visit the following site for further information:
 
 https://medium.com/joyso/solidity-how-does-function-name-affect-gas-consumption-in-smart-contract-47d270d8ac92
 
 ## [G-11] Activate the optimizer
-
 Before deploying your contract, activate the optimizer when compiling using `solc --optimize --bin sourceFile.sol`. By default, the optimizer will optimize the contract assuming it is called 200 times across its lifetime. If you want the initial contract deployment to be cheaper and the later function executions to be more expensive, set it to `--optimize-runs=1`. Conversely, if you expect many transactions and do not care for higher deployment cost and output size, set `--optimize-runs` to a high number.
 
 ```
@@ -2584,7 +2478,6 @@ settings: {
 },
 };
 ```
-
 Please visit the following site for further information:
 
 https://docs.soliditylang.org/en/v0.5.4/using-the-compiler.html#using-the-commandline-compiler
@@ -2605,11 +2498,9 @@ DUP1
 PUSH1 [revert offset]
 JUMPI
 ```
-
 Disclaimer: There have been several bugs with security implications related to optimizations. For this reason, Solidity compiler optimizations are disabled by default, and it is unclear how many contracts in the wild actually use them. Therefore, it is unclear how well they are being tested and exercised. High-severity security issues due to optimization bugs have occurred in the past. A high-severity bug in the emscripten -generated solc-js compiler used by Truffle and Remix persisted until late 2018. The fix for this bug was not reported in the Solidity CHANGELOG. Another high-severity optimization bug resulting in incorrect bit shift results was patched in Solidity 0.5.6. Please measure the gas savings from optimizations, and carefully weigh them against the possibility of an optimization-related bug. Also, monitor the development and adoption of Solidity compiler optimizations to assess their maturity.
 
 ## [G-12] Constructors can be marked payable
-
 Payable functions cost less gas to execute, since the compiler does not have to add extra checks to ensure that a payment wasn't provided. A constructor can safely be marked as payable, since only the deployer would be able to pass funds, and the project itself would not pass any funds.
 
 Here are some of the instances entailed:
@@ -2619,7 +2510,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```solidity
     constructor(CollateralConfig memory config, uint192 revenueHiding)
 ```
-
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/EURFiatCollateral.sol#L23-L27
 
 ```solidity
@@ -2629,7 +2519,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
         uint48 targetUnitOracleTimeout_
     ) FiatCollateral(config) {
 ```
-
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/FiatCollateral.sol#L62-L70
 
 ```solidity
@@ -2645,7 +2534,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-13] Use assembly for small keccak256 hashes, in order to save gas
-
 If the arguments to the encode call can fit into the scratch space (two words or fewer), then it's more efficient to use assembly to generate the hash (80 gas): keccak256(abi.encodePacked(x, y)) -> assembly {mstore(0x00, a); mstore(0x20, b); let hash := keccak256(0x00, 0x40); }
 
 Here are some of the instances entailed:
@@ -2658,7 +2546,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```
 
 ## [G-14] Reduce gas usage by moving to Solidity 0.8.19 or later
-
 Please visit the following link for substantiated details:
 
 https://soliditylang.org/blog/2023/02/22/solidity-0.8.19-release-announcement/#preventing-dead-code-in-runtime-bytecode
@@ -2669,18 +2556,13 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 
 ```solidity
 pragma solidity 0.6.12;
-
 ```
-
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/aave/StaticATokenErrors.sol
 
 ```solidity
 pragma solidity 0.6.12;
-
 ```
-
 ## [G-15] Using this to access functions results in an external call, wasting gas
-
 External calls have an overhead of 100 gas, which can be avoided by not referencing the function using this. Contracts are [allowed](https://docs.soliditylang.org/en/latest/contracts.html#function-overriding) to override their parents' functions and change the visibility from external to public, so make this change if it's required in order to call the function internally.
 
 Here are some of the instances entailed:
@@ -2690,7 +2572,6 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 ```solidity
         try this.tryPrice() returns (uint192 low, uint192 high, uint192 pegPrice) {
 ```
-
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/Asset.sol
 
 ```solidity
@@ -2701,53 +2582,49 @@ https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf
 129:        try this.tryPrice() returns (uint192 low, uint192 high, uint192) {
 ```
 
----
+
+
+***
 
 # Audit Analysis
 
 For this audit, 2 analysis reports were submitted by wardens. An analysis report examines the codebase as a whole, providing observations and advice on such topics as architecture, mechanism, or approach. The [report highlighted below](https://github.com/code-423n4/2023-07-reserve-findings/issues/42) by **RaymondFam** received the top score from the judge.
 
-_The following warden also submitted a report: [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/37)._
+*The following warden also submitted a report: [0xA5DF](https://github.com/code-423n4/2023-07-reserve-findings/issues/37).*
 
 ### Introduction
 
 The following is a detailed analysis of the Reserve Protocol, with a comprehensive exploration of the codebase, architecture, quality, centralization risks, mechanisms, and potential systemic risks. In this report, six key vulnerabilities have been identified and ranked by severity, with three identified as high, and the remaining three as medium. The potential issues range from token loss during transfers to early exploits, reentrancy vulnerabilities, incorrect collateral pricing, and lack of protection during withdrawals. Each vulnerability is thoroughly explained with corresponding recommendations to mitigate the associated risks. The report further covers the evaluation approach, providing insightful suggestions for improving the codebase and minimizing centralization risks. The mechanism review and an assessment of systemic risks offer an understanding of the potential threats that need to be managed for long-term system stability.
 
 ### Comments for the judge to contextualize my findings
-
 A total of 3 highs, 3 mediums along with additional inputs in the Gas and QA reports have been submitted. It's worth noting that loopholes still abound depending on how you would visualize the codebase both short and long terms. Here is the breakdown of the HM findings in their condensed forms:
 
 1. Potential Loss of Rewards During Token Transfers in StaticATokenLM.sol (High)
-   The report identifies a potential issue in the Reserve Protocol, where the process of transferring tokens could lead to permanent loss of rewards for the sender due to the order of function calls and behavior of certain functions. The issue arises primarily from the `_getPendingRewards` function not accounting for all recent rewards from the `INCENTIVES_CONTROLLER` when the `fresh` parameter is set to `false`. This miscalculation could then negatively affect the output of the `_updateUserSnapshotRewardsPerToken` function, resulting in some rewards being missed, particularly affecting the `Backing Manager` during `RToken` redemptions. The issue could also affect token transfers to successful auction bidders. The report recommends mitigating this by introducing an additional call to update the state of rewards before any token transfer occurs, specifically within the `_beforeTokenTransfer` function, to ensure accurate internal accounting of rewards and prevent loss or premature gain during transfers.
+The report identifies a potential issue in the Reserve Protocol, where the process of transferring tokens could lead to permanent loss of rewards for the sender due to the order of function calls and behavior of certain functions. The issue arises primarily from the `_getPendingRewards` function not accounting for all recent rewards from the `INCENTIVES_CONTROLLER` when the `fresh` parameter is set to `false`. This miscalculation could then negatively affect the output of the `_updateUserSnapshotRewardsPerToken` function, resulting in some rewards being missed, particularly affecting the `Backing Manager` during `RToken` redemptions. The issue could also affect token transfers to successful auction bidders. The report recommends mitigating this by introducing an additional call to update the state of rewards before any token transfer occurs, specifically within the `_beforeTokenTransfer` function, to ensure accurate internal accounting of rewards and prevent loss or premature gain during transfers.
 2. Potential Early Exploit in Morho-Aave ERC4626 Implementation (High)
-   The report describes an exploit in a blockchain smart contract where an attacker could potentially gain unauthorized control over a significant portion of the assets stored within the contract's "vault". This is possible when the vault is initially empty, and an attacker deposits a negligible amount before a legitimate user's deposit, thereby owning shares while the total vault asset is still low. The attacker then donates a large amount to the vault, causing a precision error which leads to other users receiving no shares despite depositing assets. The attacker redeems their shares, possibly gaining a significant portion of the vault's assets. This vulnerability arises from the flawed inheritance structure of the underlying smart contract and its functions, particularly the `MorphoTokenisedDeposit. _decimalsOffset()` function. A proof-of-concept is given which shows how an attacker can implement this exploit in five steps. The report recommends mitigating this risk by hardcoding `MorphoTokenisedDeposit. _decimalsOffset()` to return `9` instead of `0`.
+The report describes an exploit in a blockchain smart contract where an attacker could potentially gain unauthorized control over a significant portion of the assets stored within the contract's "vault". This is possible when the vault is initially empty, and an attacker deposits a negligible amount before a legitimate user's deposit, thereby owning shares while the total vault asset is still low. The attacker then donates a large amount to the vault, causing a precision error which leads to other users receiving no shares despite depositing assets. The attacker redeems their shares, possibly gaining a significant portion of the vault's assets. This vulnerability arises from the flawed inheritance structure of the underlying smart contract and its functions, particularly the `MorphoTokenisedDeposit. _decimalsOffset()` function. A proof-of-concept is given which shows how an attacker can implement this exploit in five steps. The report recommends mitigating this risk by hardcoding `MorphoTokenisedDeposit. _decimalsOffset()` to return `9` instead of `0`.
 3. Cross-Function Reentrancy Vulnerability Leading to Unintended Token Minting in `RewardableERC20Wrapper.deposit` (High)
-   The report outlines a substantial reentrancy vulnerability within the `RewardableERC20Wrapper` contract, particularly the `deposit()` function. This vulnerability, which can be exploited through direct and cross-function reentrancy attacks, becomes evident when ERC777 tokens or other token types with "hook" features serve as the underlying token. Successful exploitation could trigger unwarranted token minting, leading to a skewed token supply, thereby compromising the contract's integrity and impacting individual token value. This susceptibility is due to the `_mint(_to, _amount)` operation execution prior to the `underlying.safeTransferFrom(msg.sender, address(this), _amount)` call within the `deposit()` function. Such a sequence allows an ERC777 token to initiate a reentrant call back to `deposit()`, thereby allowing token minting before the contract's state is adequately updated. To mitigate this, the report suggests implementing a reentrancy guard for all public and external functions that modify the contract's state and call external contracts. It also recommends refactoring the `deposit()` function to adhere to the check-effects-interactions pattern, conducting state changes post external calls.
-4. Risk of Incorrect Collateral Pricing in Case of Aggregator Reaching minAnswer (Medium)
-   The report highlights a significant issue within Chainlink aggregators related to the built-in circuit breaker, which can cause the oracle to continuously return the `minPrice` rather than the actual asset price during substantial price drops. The problem occurs when an asset's price goes below its `minPrice`; the protocol then overvalues the token at the `minPrice`, leading to overvalued function calls. The issue becomes prominent when the `defaultThreshold` is set in a way that keeps the `pegPrice` between `pegBottom` and `pegTop`, which can potentially lead to an excessively large issuance of `RTokens`, creating an unnoticed unhealthy collateral basket. Although a combination of oracles, such as Chainlink and Band, could potentially prevent this situation, a malicious user could still exploit Band by DDOSing relayers to block price updates. To address this issue, the report suggests cross-checking the returned price in the `OracleLib.price` against `minPrice/maxPrice`, and triggering a revert if the price falls outside these boundaries, thus ensuring an accurate price representation.
+The report outlines a substantial reentrancy vulnerability within the `RewardableERC20Wrapper` contract, particularly the `deposit()` function. This vulnerability, which can be exploited through direct and cross-function reentrancy attacks, becomes evident when ERC777 tokens or other token types with "hook" features serve as the underlying token. Successful exploitation could trigger unwarranted token minting, leading to a skewed token supply, thereby compromising the contract's integrity and impacting individual token value. This susceptibility is due to the `_mint(_to, _amount)` operation execution prior to the `underlying.safeTransferFrom(msg.sender, address(this), _amount)` call within the `deposit()` function. Such a sequence allows an ERC777 token to initiate a reentrant call back to `deposit()`, thereby allowing token minting before the contract's state is adequately updated. To mitigate this, the report suggests implementing a reentrancy guard for all public and external functions that modify the contract's state and call external contracts. It also recommends refactoring the `deposit()` function to adhere to the check-effects-interactions pattern, conducting state changes post external calls.
+4. Risk of Incorrect Collateral Pricing in Case of  Aggregator Reaching minAnswer (Medium)
+The report highlights a significant issue within Chainlink aggregators related to the built-in circuit breaker, which can cause the oracle to continuously return the `minPrice` rather than the actual asset price during substantial price drops. The problem occurs when an asset's price goes below its `minPrice`; the protocol then overvalues the token at the `minPrice`, leading to overvalued function calls. The issue becomes prominent when the `defaultThreshold` is set in a way that keeps the `pegPrice` between `pegBottom` and `pegTop`, which can potentially lead to an excessively large issuance of `RTokens`, creating an unnoticed unhealthy collateral basket. Although a combination of oracles, such as Chainlink and Band, could potentially prevent this situation, a malicious user could still exploit Band by DDOSing relayers to block price updates. To address this issue, the report suggests cross-checking the returned price in the `OracleLib.price` against `minPrice/maxPrice`, and triggering a revert if the price falls outside these boundaries, thus ensuring an accurate price representation. 
 5. Lack of protection when withdrawing Static Atoken (Medium)
-   The report reveals a significant issue with the Aave plugin regarding its ever-increasing exchange rate. It shows that while an early wrap of AToken results in more Static Atoken minting, withdrawal timing can greatly impact the amount of AToken redeemed due to the nonlinear growth of the exchange rate. This could lead to unequal percentage gains for users who perform similar calls around the same time. Furthermore, rewrapping the AToken may not be beneficial if it encounters a sudden surge, consequently thwarting the initial objective. The highlighted code snippets show that choosing `staticAmount > 0` could result in a lesser amount of AToken being withdrawn when the `currentRate` is stagnant. In contrast, choosing `dynamicAmount > 0` could lead to burning a higher than expected amount of Static Atoken. To mitigate this, the report suggests implementing slippage protection on `StaticATokenLM._withdraw` so that users could set the minimum AToken amount to receive or the maximum Static Atoken amount to burn.
+The report reveals a significant issue with the Aave plugin regarding its ever-increasing exchange rate. It shows that while an early wrap of AToken results in more Static Atoken minting, withdrawal timing can greatly impact the amount of AToken redeemed due to the nonlinear growth of the exchange rate. This could lead to unequal percentage gains for users who perform similar calls around the same time. Furthermore, rewrapping the AToken may not be beneficial if it encounters a sudden surge, consequently thwarting the initial objective. The highlighted code snippets show that choosing `staticAmount > 0` could result in a lesser amount of AToken being withdrawn when the `currentRate` is stagnant. In contrast, choosing `dynamicAmount > 0` could lead to burning a higher than expected amount of Static Atoken. To mitigate this, the report suggests implementing slippage protection on `StaticATokenLM._withdraw` so that users could set the minimum AToken amount to receive or the maximum Static Atoken amount to burn.
 6. Lack of protection when caling `CusdcV3Wrapper._withdraw` (Medium)
-   The report discusses potential risks associated with the `wComet` unwrapping process in the `CusdcV3Wrapper` contract. It notes that users who invoke `CusdcV3Wrapper._withdraw` simultaneously could experience different percentage gains due to the non-linear rebasing of `comet`. Moreover, the report suggests that the rate-determining `getUpdatedSupplyIndicies()` function is inaccessible to most users who make partial withdrawals, obscuring the ideal unwrapping moment. The document provides a detailed code walkthrough, demonstrating how the value of `baseSupplyIndex` influences the burn amount, with lower values resulting in higher `principalValueSupply` and therefore a smaller `burn` quantity. To remedy these issues, the report proposes implementing slippage protection on `CusdcV3Wrapper._withdraw`, allowing users to set the minimum `comet` to receive or the maximum `wComet` to burn.
+The report discusses potential risks associated with the `wComet` unwrapping process in the `CusdcV3Wrapper` contract. It notes that users who invoke `CusdcV3Wrapper._withdraw` simultaneously could experience different percentage gains due to the non-linear rebasing of `comet`. Moreover, the report suggests that the rate-determining `getUpdatedSupplyIndicies()` function is inaccessible to most users who make partial withdrawals, obscuring the ideal unwrapping moment. The document provides a detailed code walkthrough, demonstrating how the value of `baseSupplyIndex` influences the burn amount, with lower values resulting in higher `principalValueSupply` and therefore a smaller `burn` quantity. To remedy these issues, the report proposes implementing slippage protection on `CusdcV3Wrapper._withdraw`, allowing users to set the minimum `comet` to receive or the maximum `wComet` to burn.
 
 ### Approach taken in evaluating the codebase
-
 Going through the recommended specs and links is of paramount importance prior to going over the codebases line upon line. I started with the generic contracts and then moved on to tackling the specific plugins one after another. It has also helped me smell out some bugs by reading past related audit reports as I pieced together the puzzles. Deep diving into the code logic was fun and satisfying when noticing how the flaws could be so exploited.
 
 ### Architecture recommendations
-
-The codebase could do better with adequate and complete NatSpec along with some thorough flow charts to help link up essential flows/calls. There have been some redundant and unneeded codes presented in the Gas report. Touching up the codebase with the low and non-critical feedback from the QA report would also help amplify code robustness.
+The codebase could do better with adequate and complete NatSpec along with some thorough flow charts to help link up essential flows/calls. There have been some redundant and unneeded codes presented in the Gas report. Touching up the codebase with the low and non-critical feedback from the QA report would also help amplify code robustness. 
 
 ### Codebase quality analysis
-
-The Reserve Protocol features one of the most sophisticated and well-structured codebases in the industry. Having prior knowledge of the previous audits will not make it enough to revisit the documentation and specifications. You would assuredly gain a better and often another facet of understanding of the business logic particularly when it relates to Dimensional Analysis.
+The Reserve Protocol features one of the most sophisticated and well-structured codebases in the industry. Having prior knowledge of the previous audits will not make it enough to revisit the documentation and specifications. You would assuredly gain a better and often another facet of understanding of the business logic particularly when it relates to Dimensional Analysis. 
 
 ### Centralization risks
-
-There are some centralized risks associated with the vendors but they are deemed out of scope here. Nonetheless, these vendors are mostly reputable third-party contracts that have relatively been battled tested and should not pose much of a concern at this juncture. Perhaps, the protocol should look into implementing some form of emergency contract and/or key function pausing/freezing and be prepared for the worst.
+There are some centralized risks associated with the vendors but they are deemed out of scope here. Nonetheless, these vendors are mostly reputable third-party contracts that have relatively been battled tested and should not pose much of a concern at this juncture. Perhaps, the protocol should look into implementing some form of emergency contract and/or key function pausing/freezing and be prepared for the worst. 
 
 ### Mechanism review
-
 The Reserve Protocol, with its intricate design and interlocking mechanisms, presents unique challenges for ensuring the stability and security of its network. The protocol has addressed several key concerns raised in previous reports, showcasing its commitment to maintaining a safe and reliable platform for its users.
 
 However, the protocol's complexity necessitates ongoing vigilance. The Token Transfer Mechanism, Vault Control Mechanism, and Withdrawal Mechanisms, while remedied, need constant monitoring to prevent the re-emergence of issues such as inaccurate accounting of rewards or unauthorized asset control.
@@ -2755,14 +2632,12 @@ However, the protocol's complexity necessitates ongoing vigilance. The Token Tra
 Moreover, the Token Minting and Price Retrieval Mechanisms require careful handling to avoid potential reentrancy attacks and misvaluation of function calls. Any discrepancies in these systems could lead to an unpredictable token supply and excessive issuance of RTokens, thus destabilizing the entire ecosystem.
 
 ### Systemic risks
-
-Limited risks will always prevail considering the majority of current designs have not gone live yet. The previous audit on governance currently falling also under the plugins/\*, when more elaborately worked upon and implemented, should help defray all anticipated threats. I think the adoption of Revenue Hiding via AppreciatingFiatCollateral.sol is a smart approach overall to minimize the likelihood of having collaterals defaulted to DISABLED. Coupled with good collateral rewards revenue incentives, the high participation of RSR stakers that enhances over-collateralization would assuredly make the system fully established and intact from getting anywhere near to an undesirable haircut.
+Limited risks will always prevail considering the majority of current designs have not gone live yet. The previous audit on governance currently falling also under the plugins/*, when more elaborately worked upon and implemented, should help defray all anticipated threats. I think the adoption of Revenue Hiding via AppreciatingFiatCollateral.sol is a smart approach overall to minimize the likelihood of having collaterals defaulted to DISABLED. Coupled with good collateral rewards revenue incentives, the high participation of RSR stakers that enhances over-collateralization would assuredly make the system fully established and intact from getting anywhere near to an undesirable haircut.  
 
 ### Time spent
-
 72 hours
 
----
+***
 
 # [Mitigation Review](#mitigation-review)
 
@@ -2779,58 +2654,56 @@ Units and price calculations in LSD collateral types were fixed. `CurveVolatileC
 ## Mitigation Review Scope
 
 ### Branch
+ https://github.com/reserve-protocol/protocol/tree/master
 
-https://github.com/reserve-protocol/protocol/tree/master
 
 ### Individual PRs
-
-| URL                                                   | Mitigation of | Purpose                                                                        |
-| ----------------------------------------------------- | ------------- | ------------------------------------------------------------------------------ |
-| https://github.com/reserve-protocol/protocol/pull/899 | H-01          | Fixes units and price calculations in cbETH, rETH, ankrETH collateral plugins. |
-| https://github.com/reserve-protocol/protocol/pull/896 | H-02          | Removes `CurveVolatileCollateral`.                                             |
-| https://github.com/reserve-protocol/protocol/pull/930 | H-03          | Skip reward claim in `_checkpoint` if shutdown.                                |
-| https://github.com/reserve-protocol/protocol/pull/896 | M-01          | Removes `CurveVolatileCollateral`.                                             |
-| https://github.com/reserve-protocol/protocol/pull/889 | M-02          | Use decimals from underlying Comet.                                            |
-| https://github.com/reserve-protocol/protocol/pull/916 | M-03          | Acknowledged and documented.                                                   |
-| https://github.com/reserve-protocol/protocol/pull/896 | M-04          | Roll over remainder to next call.                                              |
-| https://github.com/reserve-protocol/protocol/pull/896 | M-05          | Add call to `emergencyWithdraw`.                                               |
-| https://github.com/reserve-protocol/protocol/pull/917 | M-06          | Enforce (`0, FIX_MAX`) as "unpriced" during oracle timeout.                    |
-| https://github.com/reserve-protocol/protocol/pull/917 | M-08          | Unpriced on oracle timeout.                                                    |
-| https://github.com/reserve-protocol/protocol/pull/917 | M-09          | Enforce (`0, FIX_MAX`) as "unpriced" during oracle timeout.                    |
+| URL | Mitigation of | Purpose | 
+| ----------- | ------------- | ----------- |
+| https://github.com/reserve-protocol/protocol/pull/899 | H-01 | Fixes units and price calculations in cbETH, rETH, ankrETH collateral plugins. |
+| https://github.com/reserve-protocol/protocol/pull/896 | H-02 | Removes `CurveVolatileCollateral`. |
+| https://github.com/reserve-protocol/protocol/pull/930 | H-03 | Skip reward claim in `_checkpoint` if shutdown. |
+| https://github.com/reserve-protocol/protocol/pull/896 | M-01 | Removes `CurveVolatileCollateral`. |
+| https://github.com/reserve-protocol/protocol/pull/889 | M-02 | Use decimals from underlying Comet. |
+| https://github.com/reserve-protocol/protocol/pull/916 | M-03 | Acknowledged and documented. |
+| https://github.com/reserve-protocol/protocol/pull/896 | M-04 | Roll over remainder to next call. |
+| https://github.com/reserve-protocol/protocol/pull/896 | M-05 | Add call to `emergencyWithdraw`. |
+| https://github.com/reserve-protocol/protocol/pull/917 | M-06 | Enforce (`0, FIX_MAX`) as "unpriced" during oracle timeout. |
+| https://github.com/reserve-protocol/protocol/pull/917 | M-08 | Unpriced on oracle timeout. |
+| https://github.com/reserve-protocol/protocol/pull/917 | M-09 | Enforce (`0, FIX_MAX`) as "unpriced" during oracle timeout. |
 
 ### Out of Scope
 
-| URL                                                   | Mitigation of | Purpose                                                                                                                           |
-| ----------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-|                                                       | M-07          | Acknowledged. See details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/24#issuecomment-1670250237). |
-| https://github.com/reserve-protocol/protocol/pull/896 | M-10          | Acknowledged, documented.                                                                                                         |
-| https://github.com/reserve-protocol/protocol/pull/920 | M-11          | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1695841823).     |
-| https://github.com/reserve-protocol/protocol/pull/920 | M-12          | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1701397555).     |
-|                                                       | M-13          | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/8#issuecomment-1688439465).      |
-|                                                       | M-14          | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/7#issuecomment-1695796001).      |
-|                                                       | M-15          | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/4#issuecomment-1695841054).      |
+| URL | Mitigation of | Purpose | 
+| ----------- | ------------- | ----------- |
+| | M-07 | Acknowledged. See details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/24#issuecomment-1670250237). |
+| https://github.com/reserve-protocol/protocol/pull/896 | M-10 | Acknowledged, documented. |
+| https://github.com/reserve-protocol/protocol/pull/920 | M-11 | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/12#issuecomment-1695841823). |
+| https://github.com/reserve-protocol/protocol/pull/920 | M-12 | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/10#issuecomment-1701397555). |
+| | M-13 | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/8#issuecomment-1688439465). |
+| | M-14 | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/7#issuecomment-1695796001). |
+| | M-15 | Acknowledged. Details in [comment](https://github.com/code-423n4/2023-07-reserve-findings/issues/4#issuecomment-1695841054). |
 
 ## Mitigation Review Summary
 
-| Original Issue                                                           | Status                  | Full Details                                                                                                                                                                                                                                                                                  |
-| ------------------------------------------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [H-01](https://github.com/code-423n4/2023-07-reserve-findings/issues/23) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/20), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/3) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/2)   |
-| [H-02](https://github.com/code-423n4/2023-07-reserve-findings/issues/22) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/21), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/27) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/4)  |
-| [H-03](https://github.com/code-423n4/2023-07-reserve-findings/issues/11) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/22), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/29)  |
-| [M-01](https://github.com/code-423n4/2023-07-reserve-findings/issues/45) | 🟢 Mitigation Confirmed | Reports from [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/28), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/23) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/6)  |
-| [M-02](https://github.com/code-423n4/2023-07-reserve-findings/issues/39) | 🟢 Mitigation Confirmed | Reports from [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/30), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/24) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/7)  |
-| [M-03](https://github.com/code-423n4/2023-07-reserve-findings/issues/31) | 🟢 Mitigation Confirmed | Reports from [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/8), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/31) and [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/25)  |
-| [M-04](https://github.com/code-423n4/2023-07-reserve-findings/issues/30) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/36), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/9)  |
-| [M-05](https://github.com/code-423n4/2023-07-reserve-findings/issues/27) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/40), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/32) |
-| [M-06](https://github.com/code-423n4/2023-07-reserve-findings/issues/25) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/37), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/33) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/10) |
-| [M-08](https://github.com/code-423n4/2023-07-reserve-findings/issues/21) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/38), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/34) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/11) |
-| [M-09](https://github.com/code-423n4/2023-07-reserve-findings/issues/20) | 🟢 Mitigation Confirmed | Reports from [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/39), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/35) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/12) |
-
+| Original Issue | Status | Full Details |
+  | --- | --- | --- |
+  | [H-01](https://github.com/code-423n4/2023-07-reserve-findings/issues/23) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/20), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/3) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/2) |
+| [H-02](https://github.com/code-423n4/2023-07-reserve-findings/issues/22) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/21), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/27) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/4) |
+| [H-03](https://github.com/code-423n4/2023-07-reserve-findings/issues/11) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/22), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/29) |
+| [M-01](https://github.com/code-423n4/2023-07-reserve-findings/issues/45) |  🟢 Mitigation Confirmed | Reports from  [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/28), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/23) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/6) |
+| [M-02](https://github.com/code-423n4/2023-07-reserve-findings/issues/39) |  🟢 Mitigation Confirmed | Reports from  [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/30), [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/24) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/7) |
+| [M-03](https://github.com/code-423n4/2023-07-reserve-findings/issues/31) |  🟢 Mitigation Confirmed | Reports from  [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/8), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/31) and [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/25) |
+| [M-04](https://github.com/code-423n4/2023-07-reserve-findings/issues/30) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/36), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/9) |
+| [M-05](https://github.com/code-423n4/2023-07-reserve-findings/issues/27) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/40), [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13) and [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/32) |
+| [M-06](https://github.com/code-423n4/2023-07-reserve-findings/issues/25) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/37), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/33) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/10) |
+| [M-08](https://github.com/code-423n4/2023-07-reserve-findings/issues/21) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/38), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/34) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/11) |
+| [M-09](https://github.com/code-423n4/2023-07-reserve-findings/issues/20) |  🟢 Mitigation Confirmed | Reports from  [ronnyx2017](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/39), [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/35) and [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/12) |
+  
 **There were also 3 new Medium severity issues surfaced by the wardens. See below for details regarding the new issues.**
 
 ## [`getReward()` is not called after shutdown, which could lead to incorrect reward accumulation](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5)
-
-_Submitted by [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5)_
+*Submitted by [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5)*
 
 **Severity: Medium**
 
@@ -2848,26 +2721,24 @@ Modify that `checkpoints` are already executed, not just calling `IRewardStaking
 By not calling `convexPool.getReward()`, there is a slight loss of rewards for transferred users. The feeling is that there is no need to ignore this call, `convexPool.getReward()`, just don't revert if shutdown.
 
 **[cccz (judge) commented](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/5#issuecomment-1757630366):**
-
 > `getReward()` is not called after shutdown, which could lead to incorrect reward accumulation.
 > Consider the simple scenario where Alice is the only depositor.
->
 > 1. Alice deposits 1000 tokens.
 > 2. 100 reward tokens are generated, Alice claims the reward, `convexPool.getReward()` is called, and Alice receives 100 reward tokens.
 > 3. Another 100 reward tokens are generated, and the owner shuts down the Wrapper.
 > 4. Alice executes `withdraw(1000)`. Since `convexPool.getReward()` is not triggered, their accumulated rewards will not be increased, but the balance will be changed to 0. So `another 100 reward tokens are generated` will be lost.
 
----
+***
 
 ## [Rewards can be incorrectly distributed due to rounding rollover](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19)
-
-_Submitted by [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19), also found by [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/9)_
+*Submitted by [RaymondFam](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19), also found by [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/9)*
 
 **Severity: Medium**
 
 ### Lines of code
 
 https://github.com/reserve-protocol/protocol/blob/9ee60f142f9f5c1fe8bc50eef915cf33124a534f/contracts/plugins/assets/erc20/RewardableERC20.sol#L86
+
 
 ### Impact
 
@@ -2885,7 +2756,9 @@ Initially, assume `balanceAfterClaimingRewards = 1950000` (wei), and `_previousB
 
 `deltaPerShare` will be calculated as: `(950000 * 10^18) / (10^6 * 10^18) = 0`
 
-Now, `balanceAfterClaimingRewards` is updated to: `previous balance + (deltaPerShare * totalSupply / one) = 1000000 + (0 * (10^6 * 10^18) / 10^18) = 1000000 + 0 = 1000000 (wei) `
+Now, `balanceAfterClaimingRewards` is updated to: `previous balance + (deltaPerShare * totalSupply / one)
+= 1000000 + (0 * (10^6 * 10^18) / 10^18)
+= 1000000 + 0 = 1000000 (wei)  ` 
 
 As illustrated, the truncation issue causes `deltaPerShare` to equal `0`. This will lead to a scenario where the rewards aren't distributed accurately among users; particularly affecting those who exit earlier before the remainder becomes large enough to surpass truncation.
 
@@ -2895,29 +2768,28 @@ In a high-frequency scenario where `_claimAndSyncRewards` is invoked often, user
 
 Using a bigger multiplier as the original report suggested seems viable, but finding a suitably discrete factor could be tricky.
 
-While keeping the current change per [PR #896](https://github.com/reserve-protocol/protocol/pull/896), I suggest adding another step by normalizing both `delta` and `_totalSupply` to `PRICE_DECIMALS`, i.e. 18, which will greatly minimize the prolonged remainder rollover. The intended decimals may be obtained by undoing the normalization when needed. Here are the two useful functions (assuming `decimals` is between 1 to 18) that could help handle the issue, but it will require further code refactoring on `_claimAndSyncRewards()` and `_syncAccount()`.
+While keeping the current change per [PR #896](https://github.com/reserve-protocol/protocol/pull/896), I suggest adding another step by normalizing both `delta` and `_totalSupply` to `PRICE_DECIMALS`, i.e. 18, which will greatly minimize the prolonged remainder rollover. The intended decimals may be obtained by undoing the normalization when needed. Here are the two useful functions (assuming `decimals` is between 1 to 18) that could help handle the issue, but it will require further code refactoring on `_claimAndSyncRewards()` and `_syncAccount()`.   
 
 ```solidity
-/// @dev    Convert decimals of the value to price decimals
-function _toPriceDecimals(
-  uint128 _value,
-  uint8 decimals,
-  address liquidityPool
-) internal view returns (uint256 value) {
-  if (PRICE_DECIMALS == decimals) return uint256(_value);
-  value = uint256(_value) * 10**(PRICE_DECIMALS - decimals);
-}
+    /// @dev    Convert decimals of the value to price decimals
+    function _toPriceDecimals(uint128 _value, uint8 decimals, address liquidityPool)
+        internal
+        view
+        returns (uint256 value)
+    {
+        if (PRICE_DECIMALS == decimals) return uint256(_value);
+        value = uint256(_value) * 10 ** (PRICE_DECIMALS - decimals);
+    }
 
-/// @dev    Convert decimals of the value from the price decimals back to the intended decimals
-function _fromPriceDecimals(
-  uint256 _value,
-  uint8 decimals,
-  address liquidityPool
-) internal view returns (uint128 value) {
-  if (PRICE_DECIMALS == decimals) return _toUint128(_value);
-  value = _toUint128(_value / 10**(PRICE_DECIMALS - decimals));
-}
-
+    /// @dev    Convert decimals of the value from the price decimals back to the intended decimals
+    function _fromPriceDecimals(uint256 _value, uint8 decimals, address liquidityPool)
+        internal
+        view
+        returns (uint128 value)
+    {
+        if (PRICE_DECIMALS == decimals) return _toUint128(_value);
+        value = _toUint128(_value / 10 ** (PRICE_DECIMALS - decimals));
+    }
 ```
 
 ### Assessed type
@@ -2925,19 +2797,16 @@ function _fromPriceDecimals(
 Decimal
 
 **[ronnyx2017 (warden) commented](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19#issuecomment-1751948354):**
-
-> ```
+>```
 > deltaPerShare will be calculated as: (950000 * 10^18) / (10^6 * 10^18) = 0
 > ```
->
 > It's based on `uint256 deltaPerShare = (delta * one) / _totalSupply;` and `uint256 delta = balanceAfterClaimingRewards - _previousBalance;`.
->
-> But the `delta` is not always `950000`. It will accumulate over time because the `lastRewardBalance = balanceAfterClaimingRewards = _previousBalance + (deltaPerShare * _totalSupply) / one `.
+> 
+> But the `delta` is not always `950000`. It will accumulate over time because the `lastRewardBalance = balanceAfterClaimingRewards = _previousBalance + (deltaPerShare * _totalSupply) / one `.  
 >
 > So the max loss will be less than `10^6` wei - is my understanding, correct? Have I missed anything?
 
 **[bin3chen (warden) commented](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19#issuecomment-1751982030):**
-
 > My personal understanding is that this is an acceptable simple solution.
 >
 > See mitigation description for details in [Issue `#9`](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/9):
@@ -2948,18 +2817,15 @@ Decimal
 > ```
 
 **[RaymondFam (warden) commented](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19#issuecomment-1752018998):**
-
 > The rollover issue could be quite pronounced/prolonged if all of the factors below were to kick in together:
 >
 > A much smaller numerator than anticipated due to:
->
 > 1. e.g. 10k `rewardToken` to be distributed for the year
 > 2. A much smaller decimal (1 - 5) associated with `rewardToken`
 >
 > A much bigger denominator than anticipated due to a bigger `totalSupply` entailed say in tens of millions or even larger.
 
 **[cccz (judge) commented](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/19#issuecomment-1752358388):**
-
 > According to the Mitigation Review Guidelines, I'm inclined to consider this a new issue.
 >
 > [The original issue](https://github.com/code-423n4/2023-07-reserve-findings/issues/30) causes rewards to be locked in contract, and the mitigation solves it, but introduces the new issue of rewards being incorrectly distributed.
@@ -2968,11 +2834,10 @@ Decimal
 >
 > In the extreme case where the deposit token is SHIB and the reward token is WBTC (8 decimals), the loss may be unacceptable (1 WBTC reward for per 700 USD SHIB loss).
 
----
+***
 
 ## [User token locked due to `StargateRewardableWrapper` no longer being able to execute `StargateRewardableWrapper.withdraw()`](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13)
-
-_Submitted by [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13)_
+*Submitted by [bin2chen](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13)*
 
 In the previous implementation, when `stakingContract.totalAllocPoint = 0` `stakingContract.withdraw()` and `stakingContract.deposit()` will div 0 , `revert`. This results in `StargateRewardableWrapper` no longer being able to execute `StargateRewardableWrapper.withdraw()`, as the user's token is locked.
 
@@ -2982,27 +2847,26 @@ In the previous implementation, when `stakingContract.totalAllocPoint = 0` `stak
 
 Determine if `poolInfo.allocPoint` is equal to `0`. If equal to `0`, use `stakingContract.emergencyWithdraw()` instead of `stakingContract.deposit()` to avoid reverting. The mitigation resolved the original issue.
 
+
 ### Suggestion
 
 Since `allocPoint==0` is used instead of `totalAllocPoint==0`, there may be a case where `allocPoint == 0` but `totalAllocPoint> 0`. However, the modified version still uses `stakingContract.emergencyWithdraw()`, which discards all rewards. It is recommended that if `totalAllocPoint> 0`, we can execute the
 `stakingContract.deposit(0)` to retrieve the reward first, then execute `stakingContract.emergencyWithdraw()`.
 
 **[bin2chen (warden) commented](https://github.com/code-423n4/2023-09-reserve-mitigation-findings/issues/13#issuecomment-1754154795):**
-
 > This problem is due to use `allocPoint==0` is used instead of `totalAllocPoint==0`. Some of the rewards are lost in this scenario.
 >
 > Assumption:
 >
 > The current: `poolInfo.allocPoint = 50`, `totalAllocPoint = 100` (have another pool).
->
 > 1.  After a certain period of time, `poolInfo.pendingRewards = 100`.
-> 2.  `stakingContract.set()` changes `poolInfo.allocPoint = 0`, but `totalAllocPoint` is still `50`. (`set()` will trigger accumulation pending rewards first).
-> 3.  `StargateRewardableWrapper.claim()` -> `stakingContract.emergencyWithdraw()` will discard any pending rewards.
+> 2. `stakingContract.set()` changes `poolInfo.allocPoint = 0`, but `totalAllocPoint` is still `50`. (`set()` will trigger accumulation pending rewards first).
+> 3. `StargateRewardableWrapper.claim()` -> `stakingContract.emergencyWithdraw()` will discard any pending rewards.
 >
-> In step 3, if `totalAllocPoint > 0`, we can use `stakingContract.deposit(0)` to retrieve the pending rewards first, then
-> call `stakingContract.emergencyWithdraw()` to avoid discarding the `pendingRewards`.
+> In step 3, if `totalAllocPoint > 0`, we can use `stakingContract.deposit(0)` to retrieve the pending rewards first, then 
+call `stakingContract.emergencyWithdraw()` to avoid discarding the `pendingRewards`.
 
----
+***
 
 # Disclosures
 
