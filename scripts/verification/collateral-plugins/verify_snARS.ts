@@ -34,7 +34,7 @@ async function main() {
         priceTimeout: priceTimeout.toString(),
         chainlinkFeed: networkConfig[chainId].chainlinkFeeds.snARS,
         oracleError: fp('0.01').toString(), // 1%
-        erc20: networkConfig[chainId].tokens.sFRAX,
+        erc20: networkConfig[chainId].tokens.snARS,
         maxTradeVolume: fp('1e6').toString(), // $1m,
         oracleTimeout: '3600', // 1 hr
         targetName: hre.ethers.utils.formatBytes32String('ARS'),
