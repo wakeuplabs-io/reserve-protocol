@@ -35,32 +35,30 @@ const makeFiatCollateralTestSuite = (
     const NumCollateralFactory: ContractFactory = await ethers.getContractFactory(
       'SnARSFiatCollateral'
     )
-    let collateral: TestICollateral
-    try {
-      collateral = <TestICollateral>await NumCollateralFactory.deploy(
-        {
-          erc20: opts.erc20,
-          targetName: opts.targetName,
-          priceTimeout: opts.priceTimeout,
-          chainlinkFeed: opts.chainlinkFeed,
-          oracleError: opts.oracleError,
-          oracleTimeout: opts.oracleTimeout,
-          maxTradeVolume: opts.maxTradeVolume,
-          defaultThreshold: opts.defaultThreshold,
-          delayUntilDefault: opts.delayUntilDefault,
-        },
-        opts.revenueHiding,
-        { gasLimit: 2000000000 }
-      )
-      await collateral.deployed()
-      // Push forward chainlink feed
-      await pushOracleForward(opts.chainlinkFeed!)
-      await expect(collateral.refresh())
-      return collateral
-    } catch (error) {
-      console.log(`Error deploying collateral`, error)
-      throw error
-    }
+
+    const collateral = <TestICollateral>await NumCollateralFactory.deploy(
+      {
+        erc20: opts.erc20,
+        targetName: opts.targetName,
+        priceTimeout: opts.priceTimeout,
+        chainlinkFeed: opts.chainlinkFeed,
+        oracleError: opts.oracleError,
+        oracleTimeout: opts.oracleTimeout,
+        maxTradeVolume: opts.maxTradeVolume,
+        defaultThreshold: opts.defaultThreshold,
+        delayUntilDefault: opts.delayUntilDefault,
+      },
+      opts.revenueHiding,
+      { gasLimit: 2000000000 }
+    )
+    await collateral.deployed()
+
+    // Push forward chainlink feed
+    await pushOracleForward(opts.chainlinkFeed!)
+
+    await expect(collateral.refresh())
+
+    return collateral
   }
 
   type Fixture<T> = () => Promise<T>

@@ -1027,30 +1027,17 @@ export default function fn<X extends CollateralFixtureContext>(
           const FiatCollateralFactory: ContractFactory = await ethers.getContractFactory(
             'NumFiatCollateral'
           )
-          try {
-             return <TestICollateral>await FiatCollateralFactory.deploy(
-              {
-                priceTimeout: PRICE_TIMEOUT,
-                chainlinkFeed: chainlinkFeed.address,
-                oracleError: ORACLE_ERROR,
-                oracleTimeout: ORACLE_TIMEOUT,
-                maxTradeVolume: MAX_UINT192,
-                erc20: erc20.address,
-                targetName: ethers.utils.formatBytes32String('ARS'),
-                defaultThreshold: fp('0.01'), // 1%
-                delayUntilDefault: bn('86400'), // 24h,
-              },
-              fp('0'),
-              { gasLimit: 2000000000 }
-            )
-           // await collateral.deployed()
-            // Push forward chainlink feed
-           // await pushOracleForward(chainlinkFeed.address!)
-           // return collateral
-          } catch (error) {
-            console.log(`Error deploying collateral`, error)
-            throw error
-          }
+          return <TestICollateral>await FiatCollateralFactory.deploy({
+            priceTimeout: PRICE_TIMEOUT,
+            chainlinkFeed: chainlinkFeed.address,
+            oracleError: ORACLE_ERROR,
+            oracleTimeout: ORACLE_TIMEOUT,
+            maxTradeVolume: MAX_UINT192,
+            erc20: erc20.address,
+            targetName: ethers.utils.formatBytes32String('ARS'),
+            defaultThreshold: fp('0.01'), // 1%
+            delayUntilDefault: bn('86400'), // 24h,
+          })
         } else {
           throw new Error(`Unknown target: ${target}`)
         }
