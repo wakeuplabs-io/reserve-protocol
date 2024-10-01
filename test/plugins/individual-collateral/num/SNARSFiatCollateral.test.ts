@@ -15,8 +15,8 @@ import { MAX_UINT192 } from '#/common/constants'
 import {
   DELAY_UNTIL_DEFAULT,
   FORK_BLOCK,
-  USDC_ORACLE_TIMEOUT,
-  USDC_ORACLE_ERROR,
+  ORACLE_TIMEOUT,
+  ORACLE_ERROR,
   PRICE_TIMEOUT,
 } from './constants'
 import { mintCollateralTo } from './helpers'
@@ -203,5 +203,5 @@ const makeOpts = (
 const { tokens, chainlinkFeeds } = networkConfig[8453]
 makeFiatCollateralTestSuite(
   'NumFiatCollateral - snARS',
-  makeOpts(tokens.snARS!, chainlinkFeeds.snARS!, USDC_ORACLE_TIMEOUT, USDC_ORACLE_ERROR)
+  makeOpts(tokens.snARS!, chainlinkFeeds.snARS!, ORACLE_TIMEOUT, ORACLE_ERROR)
 )

@@ -19,7 +19,7 @@ import {
   PRICE_TIMEOUT,
   ORACLE_TIMEOUT,
   ORACLE_ERROR,
-} from '../../../../test/plugins/individual-collateral/ethena/constants'
+} from '../../../../test/plugins/individual-collateral/num/constants'
 
 async function main() {
   // ==== Read Configuration ====
@@ -56,7 +56,7 @@ async function main() {
       priceTimeout: PRICE_TIMEOUT.toString(),
       chainlinkFeed: networkConfig[chainId].chainlinkFeeds.nARS,
       oracleError: ORACLE_ERROR.toString(),
-      erc20: networkConfig[chainId].tokens.sUSDe,
+      erc20: networkConfig[chainId].tokens.nARS,
       maxTradeVolume: fp('1e6').toString(), // $1m,
       oracleTimeout: ORACLE_TIMEOUT.toString(), // 24 hr
       targetName: hre.ethers.utils.formatBytes32String('ARS'),

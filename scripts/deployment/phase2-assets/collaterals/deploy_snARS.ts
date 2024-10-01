@@ -40,7 +40,7 @@ async function main() {
 
   const deployedCollateral: string[] = []
 
-  /********  Deploy nuARS Collateral - nuARS  **************************/
+  /********  Deploy snARS Collateral - snARS  **************************/
 
   const nuARSCollateralFactory: ContractFactory = await hre.ethers.getContractFactory(
     'NumFiatCollateral'
