@@ -6,7 +6,7 @@ import { IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626
 import "@openzeppelin/contracts/utils/Address.sol";
 import "../../libraries/Fixed.sol";
 
-// Simple pass-through wrapper for real MetaMorpho ERC4626 vaults
+// Simple pass-through wrapper for real Num ERC4626 vaults
 // Allows settable asset count for testing
 contract MockNum4626 {
     using FixLib for uint192;
